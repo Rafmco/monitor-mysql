@@ -1,0 +1,15 @@
+*.code-workspace
+/node_modules
+/public
+/dist
+.idea
+.nyc_output/
+coverage/
+tests/coverage
+tests/html
+tests/report
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log
+package-lock.json
+report.xml

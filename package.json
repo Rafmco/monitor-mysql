@@ -1,0 +1,29 @@
+{
+  "author": "Rafael Machado",
+  "name": "mysqlMonitor",
+  "version": "0.0.1",
+  "description": "MySQL Monitor",
+  "private": true,
+  "scripts":   {
+    "build": "yarn build-client && yarn build-server",
+    "build-client": "cd client && yarn build",
+    "build-server": "cd server && yarn build",
+    "dev": "yarn dev-server",
+    "dev-server": "cd server && yarn dev",
+    "install": "yarn install-client && yarn install-server",
+    "install-client": "cd client && yarn install",
+    "install-server": "cd server && yarn install",
+    "lint": "yarn lint-client && yarn lint-server",
+    "lint-client": "cd client && yarn lint",
+    "lint-server": "cd server && yarn lint",
+    "test": "yarn test-server",
+    "test-server": "cd server && yarn test",
+    "start": "cd server && yarn start",
+    "log-versao": "cd client && yarn log-versao"
+  },
+  "repository":   {
+    "type": "git",
+    "url": "https://github.com/Rafmco/monitor-mysql"
+  },
+  "license": "ISC"
+}

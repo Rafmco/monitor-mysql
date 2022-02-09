@@ -1,0 +1,48 @@
+{
+  "author": "Rafael Machado",
+  "name": "mysqlmonitor",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@ianwalter/vuex-reset": "^4.3.2",
+    "@mdi/font": "^5.8.55",
+    "@tiig/v-uppercase": "^1.0.8",
+    "axios": "^0.19.1",
+    "chart.js": "^2.9.3",
+    "core-js": "^3.4.4",
+    "dayjs": "^1.8.28",
+    "register-service-worker": "^1.6.2",
+    "roboto-fontface": "*",
+    "vee-validate": "^3.3.5",
+    "vue": "^2.6.10",
+    "vue-chartjs": "^3.5.0",
+    "vue-chartkick": "^0.6.0",
+    "vue-clipboard2": "^0.3.1",
+    "vue-router": "^3.3.4",
+    "vue-the-mask": "^0.11.1",
+    "vuetify": "^2.3.2",
+    "vuex": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.4.6",
+    "@vue/cli-plugin-eslint": "^4.4.6",
+    "@vue/cli-plugin-pwa": "^4.4.6",
+    "@vue/cli-plugin-router": "^4.4.6",
+    "@vue/cli-plugin-vuex": "^4.4.6",
+    "@vue/cli-service": "^4.4.6",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.14.1",
+    "sass": "^1.26.9",
+    "sass-loader": "^8.0.0",
+    "vue-cli-plugin-vuetify": "^2.0.6",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify-loader": "^1.5.0"
+  }
+}

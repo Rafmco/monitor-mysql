@@ -1,0 +1,33 @@
+.textura-fundo {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.0) 0%, rgb(255, 255, 255) 100%),
+  repeating-linear-gradient(45deg, #E8F5E9, #E8F5E9 2px, #ffffff 2px, #ffffff 6px) !important;
+}
+
+.titulo-login {
+  background: rgba(27, 104, 71, 0.1);
+  font-family: 'Bellota Text', cursive;
+  font-size: 24px;
+}
+
+.card-autenticacao {
+  width: 600px !important;
+  max-height: 600px !important;
+  border-radius: 0px !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+  height: auto;
+}
+
+.card-logo {
+  justify-content: center !important;
+}
+
+.required label::after {
+  content: ' *';
+  color: red;
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
