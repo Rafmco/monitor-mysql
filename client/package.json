@@ -11,7 +11,7 @@
     "@ianwalter/vuex-reset": "^4.3.2",
     "@mdi/font": "^5.8.55",
     "@tiig/v-uppercase": "^1.0.8",
-    "axios": "^0.19.1",
+    "axios": "^0.21.2",
     "chart.js": "^2.9.3",
     "core-js": "^3.4.4",
     "dayjs": "^1.8.28",
@@ -25,7 +25,8 @@
     "vue-router": "^3.3.4",
     "vue-the-mask": "^0.11.1",
     "vuetify": "^2.3.2",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "xcryptig": "^1.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.4.6",

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import monitor from './monitor'
+import settings from './settings'
 import store from '@/store/'
 
 Vue.use(VueRouter)
@@ -22,7 +23,8 @@ const router = new VueRouter({
           name: 'Início',
           component: () => import('@/views/monitor/')
         },
-        ...monitor
+        ...monitor,
+        ...settings
       ],
       beforeEnter: (to, from, next) => localStorage.getItem('monitor-mysql:token') ? next() : next('/login')
     },

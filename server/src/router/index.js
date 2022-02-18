@@ -6,15 +6,24 @@ module.exports = app => {
   // Valida autenticação
   app.all('*', app.src.auth.verifyToken.verify)
 
-  app.get('/profile/dropdown', app.src.controller.profile.dropdown)
+  app.get('/menu',        app.src.controller.settings.menu.listar)
+  app.get('/menu/:id',    app.src.controller.settings.menu.exibir)
+  app.put('/menu',        app.src.controller.settings.menu.editar)
+  app.post('/menu',       app.src.controller.settings.menu.salvar)
+  app.delete('/menu/:id', app.src.controller.settings.menu.deletar)
 
-  app.get('/user', app.src.controller.user.listar)
-  app.get('/user/:id', app.src.controller.user.exibir)
-  app.put('/user', app.src.controller.user.editar)
-  app.post('/user', app.src.controller.user.salvar)
-  app.delete('/user/:id', app.src.controller.user.deletar)
+  app.get('/profile/dropdown', app.src.controller.settings.profile.dropdown)
+  app.get('/profile',          app.src.controller.settings.profile.listar)
+  app.get('/profile/:id',      app.src.controller.settings.profile.exibir)
+  app.put('/profile',          app.src.controller.settings.profile.editar)
+  app.post('/profile',         app.src.controller.settings.profile.salvar)
+  app.delete('/profile/:id',   app.src.controller.settings.profile.deletar)
 
-  app.get('/menu', app.src.controller.menu.listar)
+  app.get('/user',        app.src.controller.settings.user.listar)
+  app.get('/user/:id',    app.src.controller.settings.user.exibir)
+  app.put('/user',        app.src.controller.settings.user.editar)
+  app.post('/user',       app.src.controller.settings.user.salvar)
+  app.delete('/user/:id', app.src.controller.settings.user.deletar)
 
   /***/
   app.get('/monitor/users/usersList', app.src.controller.monitor.users.usersList)

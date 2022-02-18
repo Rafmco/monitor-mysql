@@ -26,10 +26,9 @@
         open-on-click
         return-object
       >
-        <!-- item-children="filhos" -->
         <template v-slot:append="{ item, open }">
           <div
-            v-if="item.children"
+            v-if="item.children.length"
             class="mr-2"
           >
             <v-icon v-if="open">
@@ -133,8 +132,35 @@ export default {
 
     refreshMenu () {
       this.menus = JSON.parse(window.atob(this.menusUsuario))
+      this.agruparMenu(this.menus)
+
       this.ativo = []
       this.ativo.push(this.findByUrlRouter(this.menus, this.$route.path))
+    },
+
+    agruparMenu (arr) { // https://stackoverflow.com/questions/36605002/javascript-format-array-of-objects-into-nested-children
+      var references = {}
+      arr.sort(function (a, b) {
+        // Save references to each item by id while sorting
+        references[a.id] = a; references[b.id] = b
+
+        // Add a children property
+        a.children = []; b.children = []
+        if (a.sort > b.sort) return 1
+        if (a.sort < b.sort) return -1
+        return 0
+      })
+
+      for (var i = 0; i < arr.length; i++) {
+        var item = arr[i]
+
+        if (item.parent_id && references.hasOwnProperty(item.parent_id)) {
+          references[item.parent_id].children.push(arr.splice(i, 1)[0])
+          i-- // Because the current index now contains the next item
+        }
+      }
+
+      return arr
     }
   }
 }

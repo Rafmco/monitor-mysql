@@ -1,15 +1,20 @@
-
-const validate = require('validate.js')
-
+/**
+ * @author Rafael Machado
+ * @class Menu
+ * @description Função Controller Class
+ * @param {this} app
+ */
 module.exports = app => {
+
   const validateSalvar = {
     id: { presence: true, type: 'number' },
-    login: { presence: true, type: 'string' },
     name: { presence: true, type: 'string' },
-    email: { presence: true, email: true },
-    password: { presence: true, type: 'string' },
-    status: { presence: true, type: 'number' },
-    profile_id: { presence: true, type: 'number' }
+    description: { presence: true, type: 'string' },
+    url: { presence: true, type: 'string' },
+    icon: { presence: true, type: 'string' },
+    icon_color: { presence: false, type: 'string' },
+    order: { presence: true, type: 'number' },
+    parent_id: { presence: false, type: 'number' },
   }
 
   const validateEditar = {
@@ -19,14 +24,15 @@ module.exports = app => {
 
   const listar = async (req, res) => {
     try {
-      const resp = await app.db('user')
-      .select('id', 'login', 'name', 'email')
-      .limit(req.query.limit || 10)
-      .offset(req.query.offset || 1)
-      .orderBy(req.query.orderBy || 'id')
-      .where({
-        deleted_at: null
-      });
+      const resp = await app.db('menu')
+        .select('id', 'name', 'description', 'url', 'icon', 'order', 'icon_color', 'parent_id')
+        .orderBy(req.query.orderBy || 'id')
+        .whereNull('deleted_at')
+        .modify(function(queryBuilder) {
+          if (req.query.name) {
+            queryBuilder.where('name', 'like', '%' + req.query.name + '%')
+          }
+        });
 
       return res.json(resp)
     } catch (error) {
@@ -36,7 +42,7 @@ module.exports = app => {
 
   const exibir = async (req, res) => {
     try {
-      const resp = await app.db('user')
+      const resp = await app.db('menu')
       .where({
         id: req.params.id
       })
@@ -53,23 +59,24 @@ module.exports = app => {
       const err = validate(req.body, validateEditar)
       if (err) return res.json(err)
 
-      const findOne = await app.db('user')
+      const findOne = await app.db('menu')
       .where({
         id: req.body.id
       })
-      if (!findOne.length) throw new Error('Usuário não encontrado')
+      if (!findOne.length) throw new Error('Menu não encontrado')
 
-      await app.db('user')
+      await app.db('menu')
         .where({
           id: req.body.id
         })
         .update({
-          login: req.body.login,
           name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
-          status: req.body.status,
-          profile_id: req.body.profile_id
+          description: req.body.description,
+          url: req.body.url,
+          icon: req.body.icon,
+          icon_color: req.body.icon_color,
+          order: req.body.order,
+          parent_id: req.body.parent_id
         })
 
       return res.json({ message: 'Alterado' })
@@ -83,14 +90,15 @@ module.exports = app => {
       const err = validate(req.body, validateSalvar)
       if (err) return res.json(err)
 
-      await app.db('user')
+      await app.db('menu')
         .insert({
-          login: req.body.login,
           name: req.body.name,
-          email: req.body.email,
-          password: req.body.password,
-          status: req.body.status,
-          profile_id: req.body.profile_id
+          description: req.body.description,
+          url: req.body.url,
+          icon: req.body.icon,
+          icon_color: req.body.icon_color,
+          order: req.body.order,
+          parent_id: req.body.parent_id
         })
 
       return res.json({ message: 'Inserido' })
@@ -101,13 +109,13 @@ module.exports = app => {
 
   const deletar = async (req, res) => {
     try {
-      const findOne = await app.db('user')
+      const findOne = await app.db('menu')
         .where({
           id: req.body.id
         })
-        if (!findOne.length) throw new Error('Usuário não encontrado')
+        if (!findOne.length) throw new Error('Menu não encontrado')
 
-      await app.db('user')
+      await app.db('menu')
         .where({
           id: req.params.id
         })
@@ -126,5 +134,5 @@ module.exports = app => {
     editar,
     salvar,
     deletar
-  }
-}
+  };
+};
