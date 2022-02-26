@@ -4,19 +4,19 @@
     <!-- Título -->
     <v-container
       v-if="titulo && subtitulo"
-      class="pt-3 pb-3 elevation-2"
+      class="pa-2 pb-2 elevation-2"
       fluid
       grid-list-md
       style="background: #fff !important;"
     >
-      <div class="headline font-weight-regular">
+      <div class="subtitle-1 font-weight-regular">
         <v-row
           no-gutters
           align="center"
         >
           {{ titulo }} |
           <v-col
-            class="pl-2 pt-1 subtitle-2 font-weight-light"
+            class="pl-2 pt-1 subtitle-2 font-weight-bold"
             align="start"
           >
             {{ subtitulo }}

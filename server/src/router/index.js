@@ -27,6 +27,7 @@ module.exports = app => {
 
   /***/
   app.get('/monitor/users/usersList', app.src.controller.monitor.users.usersList)
+  app.get('/monitor/users/rolesDropdown', app.src.controller.monitor.users.rolesDropdown)
 
   app.get('/monitor/dashboard/hostInfo', app.src.controller.monitor.dashboard.hostInfo)
   app.get('/monitor/dashboard/instanceInfo', app.src.controller.monitor.dashboard.instanceInfo)
@@ -40,4 +41,6 @@ module.exports = app => {
   app.get('/monitor/variables/systemVariablesList', app.src.controller.monitor.variables.systemVariablesList)
 
   app.get('/monitor/events/eventsList', app.src.controller.monitor.events.eventsList)
+
+  app.get('/monitor/schemas/schemasDropdown', app.src.controller.monitor.schemas.schemasDropdown)
 }

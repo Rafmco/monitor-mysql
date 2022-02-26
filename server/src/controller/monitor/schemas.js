@@ -2,7 +2,7 @@
 const validate = require('validate.js')
 
 module.exports = app => {
-  const usersList = async(req, res) => {
+  const schemasList = async(req, res) => {
     try {
       const sql = `CALL audit.sp_monitor_report_users();`;
 
@@ -14,13 +14,13 @@ module.exports = app => {
     }
   }
 
-  const rolesDropdown = async (_req, res) => {
+  const schemasDropdown = async (_req, res) => {
     try {
-      const findAll = await app.db("audit.admin_roles")
+      const findAll = await app.db("information_schema.schemata")
         .column(
-          "id",
-          "description"
+          "SCHEMA_NAME"
         )
+        .orderBy("SCHEMA_NAME", "ASC")
         .select();
 
       return res.json(findAll);
@@ -30,8 +30,8 @@ module.exports = app => {
   }
 
   return {
-    usersList,
-    rolesDropdown
+    schemasList,
+    schemasDropdown
   }
 
 }

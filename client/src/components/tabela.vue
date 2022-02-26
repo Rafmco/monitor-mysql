@@ -27,9 +27,11 @@
         color="primary"
         dark
         flat
-        height="45"
+        height="35"
       >
-        <v-toolbar-title>
+        <v-toolbar-title
+          class="subtitle-1 pa-0 ma-0 font-weight-bold"
+        >
           {{ titulo }}
         </v-toolbar-title>
         <v-divider

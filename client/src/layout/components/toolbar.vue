@@ -5,7 +5,7 @@
     clipped-left
     dark
     dense
-    height="64"
+    height="50"
     class="pl-2"
   >
     <!-- <v-app-bar-nav-icon /> -->
@@ -16,15 +16,15 @@
     >
       <img
         src="../../assets/logo_mysql.png"
-        class="mr-5 logo"
-        style="height: auto; width: 60px; margin-top: 8px;"
+        class="mr-2 logo"
+        style="height: auto; width: 40px; margin-top: 8px;"
       >
     </v-toolbar-title>
 
     <v-toolbar-title>
       <!-- class="text-uppercase" -->
       <span
-        style="font-size: 50px !important; margin-left: 10px;"
+        style="font-size: 35px !important; margin-left: 10px;"
       >
         MySQL Monitor
       </span>
@@ -42,7 +42,6 @@
       >
         <v-btn
           dark
-          large
           outlined
           v-on="on"
           @click="disabled ? $emit('logout') : null"

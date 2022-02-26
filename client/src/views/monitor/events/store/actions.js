@@ -15,3 +15,17 @@ export const listarEventsList = async ({ commit }, filtro) => {
     return error
   }
 }
+
+export const listarSchemasDropdown = async ({ commit }, dados) => {
+  try {
+    const res = await axios.get('monitor/schemas/schemasDropdown')
+
+    if (!res.data.erro) {
+      commit('schemasDropdown', res.data)
+    }
+
+    return res.data
+  } catch (error) {
+    return error
+  }
+}

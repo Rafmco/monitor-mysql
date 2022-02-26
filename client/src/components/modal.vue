@@ -11,7 +11,7 @@
       <v-card>
         <v-toolbar
           color="primary"
-          height="45"
+          height="40"
         >
           <v-btn
             v-if="fechar"

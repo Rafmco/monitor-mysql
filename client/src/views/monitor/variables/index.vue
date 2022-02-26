@@ -3,8 +3,8 @@
     <loading :loading="loading" />
     <pagina
       :formulario="false"
-      titulo-toolbar="Dashboard Monitoramento"
-      titulo="Dashboard Monitoramento"
+      titulo-toolbar="Monitoramento"
+      titulo="Monitoramento"
       subtitulo="System Variables"
       @fechar="resetFormulario()"
     >
@@ -29,10 +29,81 @@
             >
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
+                  <filtro
+                    :limpar-filtros="filtrosPreenchidos"
+                    :loading="loading"
+                    pesquisar
+                    @limparFiltros="filtro.scope = null, filtro.name = null, filtro.comment = null, listarSystemVariablesList()"
+                    @pesquisar="listarSystemVariablesList()"
+                  >
+                    <template slot="conteudo">
+                      <v-row
+                        class="mx-2 my-0"
+                        dense
+                      >
+                        <v-col
+                          cols="12"
+                          lg="1"
+                          md="1"
+                          xs="12"
+                        >
+                          <v-autocomplete
+                            v-model="filtro.scope"
+                            :items="scopeList"
+                            clearable
+                            dense
+                            hide-details
+                            outlined
+                            label="Escopo"
+                            placeholder="Escopo"
+                            @click:clear="filtro.scope = null, listarSystemVariablesList()"
+                            @keydown.enter="listarSystemVariablesList()"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          lg="3"
+                          md="3"
+                          xs="12"
+                        >
+                          <v-text-field
+                            v-model="filtro.name"
+                            v-uppercase
+                            auto-focus
+                            clearable
+                            dense
+                            hide-details
+                            outlined
+                            label="Nome"
+                            @click:clear="filtro.name = null, listarSystemVariablesList()"
+                            @keydown.enter="listarSystemVariablesList()"
+                          />
+                        </v-col>
+                        <v-col
+                          cols="12"
+                          lg="4"
+                          md="4"
+                          xs="12"
+                        >
+                          <v-text-field
+                            v-model="filtro.comment"
+                            auto-focus
+                            clearable
+                            dense
+                            hide-details
+                            outlined
+                            label="Comentário"
+                            @click:clear="filtro.comment = null, listarSystemVariablesList()"
+                            @keydown.enter="listarSystemVariablesList()"
+                          />
+                        </v-col>
+                      </v-row>
+                    </template>
+                  </filtro>
                   <tabela
                     :colunas="colunasSystemVariablesList"
                     :loading="loading"
-                    :registros="systemVariablesList"
+                    :registros="filteredSystemVariables"
                     :items-per-page="20"
                     titulo="Eventos"
                     toolbar-grid
@@ -206,7 +277,18 @@ export default {
         value: 'command_line_argument'
       }
     ],
+    scopeList: [
+      'GLOBAL',
+      'SESSION',
+      'SESSION ONLY'
+    ],
     loading: false,
+    search: '',
+    filtro: {
+      scope: null,
+      name: null,
+      comment: null
+    },
     setIntervalConsultas: null,
     store: {
       nome: 'paginaMonitorSystemVariables',
@@ -217,7 +299,35 @@ export default {
   computed: {
     ...mapState('paginaMonitorSystemVariables', [
       'systemVariablesList'
-    ])
+    ]),
+
+    filtrosPreenchidos () {
+      return Object.values(this.filtro).reduce((acumulador, atual) => !!acumulador || !!atual, false)
+    },
+
+    filteredSystemVariables () {
+      let filteredList = this.systemVariablesList
+
+      if (this.filtro.scope) {
+        filteredList = filteredList.filter(item => {
+          return item.variable_scope.toLowerCase() === this.filtro.scope.toLowerCase()
+        })
+      }
+
+      if (this.filtro.name) {
+        filteredList = filteredList.filter(item => {
+          return item.variable_name.toLowerCase().includes(this.filtro.name.toLowerCase())
+        })
+      }
+
+      if (this.filtro.comment) {
+        filteredList = filteredList.filter(item => {
+          return item.variable_comment.toLowerCase().includes(this.filtro.comment.toLowerCase())
+        })
+      }
+
+      return filteredList
+    }
   },
 
   async created () {
