@@ -525,6 +525,7 @@ export default {
 
   created () {
     this.listarProfile()
+    this.listarMenu()
   },
 
   methods: {

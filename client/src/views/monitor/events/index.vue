@@ -3,8 +3,8 @@
     <loading :loading="loading" />
     <pagina
       :formulario="false"
-      titulo-toolbar="Dashboard Monitoramento"
-      titulo="Dashboard Monitoramento"
+      titulo-toolbar="Monitoramento"
+      titulo="Monitoramento"
       subtitulo="Eventos"
       @fechar="resetFormulario()"
     >
@@ -87,7 +87,7 @@
                   <tabela
                     :colunas="colunasEventsList"
                     :loading="loading"
-                    :registros="eventsList"
+                    :registros="filteredEvents"
                     :items-per-page="20"
                     titulo="Eventos"
                     toolbar-grid
@@ -302,6 +302,24 @@ export default {
 
     filtrosPreenchidos () {
       return Object.values(this.filtro).reduce((acumulador, atual) => !!acumulador || !!atual, false)
+    },
+
+    filteredEvents () {
+      let filteredList = this.eventsList
+
+      if (this.filtro.schema) {
+        filteredList = filteredList.filter(item => {
+          return item.event_schema.toLowerCase() === this.filtro.schema.toLowerCase()
+        })
+      }
+
+      if (this.filtro.name) {
+        filteredList = filteredList.filter(item => {
+          return item.event_name.toLowerCase().includes(this.filtro.name.toLowerCase())
+        })
+      }
+
+      return filteredList
     }
   },
 

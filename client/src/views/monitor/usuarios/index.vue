@@ -3,8 +3,8 @@
     <loading :loading="loading" />
     <pagina
       :formulario="false"
-      titulo-toolbar="Dashboard Monitoramento"
-      titulo="Dashboard Monitoramento"
+      titulo-toolbar="Monitoramento"
+      titulo="Monitoramento"
       subtitulo="Usuários"
       @fechar="resetFormulario()"
     >
@@ -33,8 +33,8 @@
                     :loading="loading"
                     adicionar
                     pesquisar
-                    @limparFiltros="filtro.user = null, filtro.roles = null, listarUsers()"
-                    @pesquisar="listarUsers()"
+                    @limparFiltros="filtro.name = null, filtro.roles = null, listarUsersList()"
+                    @pesquisar="listarUsersList()"
                   >
                     <!-- v-if="!modal" -->
                     <!-- @adicionar="modal = true, inserir = true" -->
@@ -56,12 +56,12 @@
                             dense
                             hide-details
                             item-text="description"
-                            item-value="id"
+                            item-value="description"
                             outlined
                             label="Role"
                             placeholder="Roles"
-                            @click:clear="filtro.roles = null, listarUsers()"
-                            @keydown.enter="listarUsers()"
+                            @click:clear="filtro.roles = null, listarUsersList()"
+                            @keydown.enter="listarUsersList()"
                           />
                         </v-col>
                         <v-col
@@ -71,15 +71,15 @@
                           xs="12"
                         >
                           <v-text-field
-                            v-model="filtro.user"
+                            v-model="filtro.name"
                             auto-focus
                             clearable
                             dense
                             hide-details
                             outlined
                             label="Nome do Usuário"
-                            @click:clear="filtro.user = null, listarUsers()"
-                            @keydown.enter="listarUsers()"
+                            @click:clear="filtro.name = null, listarUsersList()"
+                            @keydown.enter="listarUsersList()"
                           />
                         </v-col>
                       </v-row>
@@ -88,7 +88,7 @@
                   <tabela
                     :colunas="colunasUsersList"
                     :loading="loading"
-                    :registros="usersList"
+                    :registros="filteredUsers"
                     :items-per-page="20"
                     titulo="Usuários"
                     toolbar-grid
@@ -126,13 +126,13 @@ export default {
     ],
     colunasUsersList: [
       {
-        text: 'User',
+        text: 'Username',
         align: 'start',
         sortable: true,
         value: 'user'
       },
       {
-        text: 'Host',
+        text: 'Hostname',
         align: 'start',
         sortable: true,
         value: 'host'
@@ -191,8 +191,8 @@ export default {
     ],
     loading: false,
     filtro: {
-      user: null,
-      roles: null
+      roles: null,
+      name: null
     },
     setIntervalConsultas: null,
     store: {
@@ -209,6 +209,26 @@ export default {
 
     filtrosPreenchidos () {
       return Object.values(this.filtro).reduce((acumulador, atual) => !!acumulador || !!atual, false)
+    },
+
+    filteredUsers () {
+      let filteredList = this.usersList
+
+      if (this.filtro.roles) {
+        filteredList = filteredList.filter(item => {
+          if (item.admin_roles) {
+            return item.admin_roles.toLowerCase().includes(this.filtro.roles.toLowerCase())
+          }
+        })
+      }
+
+      if (this.filtro.name) {
+        filteredList = filteredList.filter(item => {
+          return item.user.toLowerCase().includes(this.filtro.name.toLowerCase())
+        })
+      }
+
+      return filteredList
     }
   },
 
@@ -221,6 +241,10 @@ export default {
 
       this.loading = false
     }, 200)
+
+    this.setIntervalProcess = setInterval(() => {
+      this.refreshProcess()
+    }, 10000)
   },
 
   methods: {
@@ -232,35 +256,13 @@ export default {
     async refreshData (interval) {
       this.loading = true
 
-      await this.listarUsers()
-
-      this.loading = false
-    },
-
-    async listarUsers () {
-      this.loading = true
-
       await this.listarUsersList()
 
-      this.usersList = this.filterArray(this.usersList, this.filtro)
-      // console.log(this.filterArray(this.usersList, this.filtro))
       this.loading = false
     },
 
-    async filterArray (array, filtro) {
-      if (!filtro) {
-        return array
-      }
-
-      return array.filter(item => {
-        return Object.keys(filtro).every(key => {
-          // if (key === 'roles') {
-          //   return item[key].some(role => role.admin_roles === filtro[key])
-          // }
-
-          return item[key] === filtro[key]
-        })
-      })
+    async refreshProcess (interval) {
+      await this.listarUsersList()
     }
   }
 }

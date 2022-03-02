@@ -3,8 +3,8 @@
     <loading :loading="loading" />
     <pagina
       :formulario="false"
-      titulo-toolbar="Dashboard Monitoramento"
-      titulo="Dashboard Monitoramento"
+      titulo-toolbar="Monitoramento"
+      titulo="Monitoramento"
       :subtitulo="header"
       @fechar="resetFormulario()"
     >

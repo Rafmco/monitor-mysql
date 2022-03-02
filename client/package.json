@@ -10,7 +10,6 @@
   "dependencies": {
     "@ianwalter/vuex-reset": "^4.3.2",
     "@mdi/font": "^5.8.55",
-    "@tiig/v-uppercase": "^1.0.8",
     "axios": "^0.21.2",
     "chart.js": "^2.9.3",
     "core-js": "^3.4.4",

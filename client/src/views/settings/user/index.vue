@@ -1,15 +1,16 @@
 <template>
+  <!-- :editar-formulario="exibicao && !inserir" -->
   <pagina
     :cols="8"
-    :editar="exibicao && !inserir"
     :loading="loading"
+    :editar-formulario="!exibicao && !inserir"
     :formulario.sync="modal"
     :mais-opcoes="edicao"
     :salvar="(!exibicao) && (inserir || edicao)"
-    titulo-toolbar="Formulário de cadastro"
+    titulo-toolbar="Configurações"
     fechar
-    titulo="Cadastro de Usuários do Sistema"
-    subtitulo="Listagem e manutenção de Usuários do Sistema"
+    titulo="Configurações"
+    subtitulo="Usuários do Sistema"
     @cancelar="resetFormulario()"
     @editar="exibicao = false, edicao = true"
     @fechar="resetFormulario()"
@@ -120,10 +121,10 @@
                   v-slot="{ errors }"
                   name="Status"
                   rules="required"
-                  vid="enabled"
+                  vid="status"
                 >
                   <v-autocomplete
-                    v-model="formulario.enabled"
+                    v-model="formulario.status"
                     :disabled="exibicao && !inserir"
                     :error-messages="errors"
                     :hide-details="!errors.length"
@@ -156,11 +157,12 @@
                     :error-messages="errors"
                     :hide-details="!errors.length"
                     :items="profileDropdown"
-                    auto-select-first
                     class="required"
                     dense
                     outlined
-                    item-text="desc"
+                    data-vv-as="Perfil"
+                    data-vv-name="profileId"
+                    item-text="description"
                     item-value="id"
                     label="Perfil"
                   />
@@ -176,21 +178,19 @@
                   v-slot="{ errors }"
                   name="Senha"
                   rules="required|max:100"
-                  vid="pass"
+                  vid="password"
                 >
                   <v-text-field
-                    v-model="formulario.pass"
-                    v-mask="mascara('E', 20)"
-                    :append-icon="!verSenha ? 'mdi-lock' : 'mdi-lock-open'"
+                    v-model="formulario.password"
+                    :append-icon="verSenha ? 'mdi-lock-open' : 'mdi-lock'"
                     :disabled="exibicao && !inserir"
                     :error-messages="errors"
                     :hide-details="!errors.length"
-                    :type="!verSenha ? 'password' : 'text'"
+                    :type="verSenha ? 'text' : 'password'"
                     class="required"
                     dense
                     outlined
                     label="Senha"
-                    placeholder="****"
                     @click:append="verSenha = !verSenha"
                   />
                 </validation-provider>
@@ -394,7 +394,6 @@ export default {
     inserir: false,
     loading: false,
     modal: false,
-    modalItens: false,
     modalAviso: false,
     senhaExibir: '',
     store: {
@@ -428,6 +427,7 @@ export default {
 
   created () {
     this.listarProfile()
+    this.listarUser()
   },
 
   methods: {
@@ -467,7 +467,8 @@ export default {
           profile_id: res.type || null,
           password: decrypt(res.password) || null
         }
-        // this.senhaExibir = res.senha || null
+
+        this.senhaExibir = res.senha || null
 
         this.exibicao = true
         this.inserir = false
@@ -503,7 +504,7 @@ export default {
       })
 
       this.filtroEditar.profileId = this.profileDropdown.find(b => b.id === profile) ? profile : null
-
+      console.log(this.profileDropdown)
       this.loading = false
     },
 

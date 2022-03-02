@@ -10,7 +10,6 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import App from './App.vue'
 import Chart from 'chart.js'
 import Chartkick from 'vue-chartkick'
-import VUppercase from '@tiig/v-uppercase'
 import Vue from 'vue'
 import { mask } from 'vue-the-mask'
 import router from './router'
@@ -91,8 +90,6 @@ Vue.mixin({
 })
 
 Vue.directive('mask', mask)
-
-Vue.use(VUppercase)
 
 new Vue({
   router,
