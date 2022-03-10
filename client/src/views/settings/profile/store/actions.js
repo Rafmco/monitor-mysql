@@ -3,13 +3,24 @@ import axios from '@/plugins/axios'
 export const apagar = async ({ commit, dispatch }, id) => {
   try {
     commit('setLoading', true)
-
     const res = await axios.delete('profile/' + id)
 
     if (res.data.mensagem) {
       commit('setDadosExibir', {})
       dispatch('listar')
     }
+
+    return res.data
+  } finally {
+    commit('setLoading', false)
+  }
+}
+
+export const apagarMenu = async ({ commit }, dados) => {
+  try {
+    commit('setLoading', true)
+
+    const res = await axios.post('profile/deletarMenu', dados)
 
     return res.data
   } finally {
@@ -34,7 +45,7 @@ export const listar = async ({ commit }, parametros) => {
     commit('setLoading', true)
 
     const res = await axios.get('profile', {
-      params: parametros
+      params: parametros.filtro
     })
 
     if (!res.data.erro) {
@@ -64,6 +75,34 @@ export const salvar = async ({ commit }, dados) => {
     commit('setLoading', true)
 
     const res = await axios.post('profile', dados)
+
+    return res.data
+  } finally {
+    commit('setLoading', false)
+  }
+}
+
+export const salvarMenu = async ({ commit }, dados) => {
+  try {
+    commit('setLoading', true)
+
+    const res = await axios.post('profile/salvarMenu', dados)
+
+    return res.data
+  } finally {
+    commit('setLoading', false)
+  }
+}
+
+export const listarMenuDropdown = async ({ commit }, dados) => {
+  try {
+    commit('setLoading', true)
+
+    const res = await axios.get('menu/dropdown')
+
+    if (!res.data.erro) {
+      commit('menuDropdown', res.data)
+    }
 
     return res.data
   } finally {

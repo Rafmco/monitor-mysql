@@ -40,7 +40,26 @@
           vertical
         />
         <div class="flex-grow-1" />
+        <v-spacer />
+        <v-btn
+          v-if="btnEditar"
+          color="secondary"
+          dark
+          small
+          @click="$emit('btnEditar')"
+        >
+          <v-icon
+            size="20"
+            left
+          >
+            mdi-pencil
+          </v-icon>
+          Editar Itens
+        </v-btn>
       </v-toolbar>
+      <v-card>
+        <slot name="cabecalho" />
+      </v-card>
       <v-divider v-if="toolbarGrid" />
     </template>
     <template v-slot:item.calibrar="{ item }">
@@ -90,7 +109,7 @@
         color="error"
         @click="$emit('excluir', item.id)"
       >
-        mdi-delete-outline
+        mdi-delete
       </v-icon>
     </template>
     <template
@@ -120,6 +139,10 @@ export default {
   name: 'ComponenteTabela',
 
   props: {
+    btnEditar: {
+      default: false,
+      type: Boolean
+    },
     colunas: {
       default: () => [],
       type: Array

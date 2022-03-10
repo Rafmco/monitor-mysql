@@ -1,4 +1,7 @@
 export default {
+  menuDropdown (state, param) {
+    state.menuDropdown = param
+  },
   profileList (state, param) {
     state.profileList = param
   },

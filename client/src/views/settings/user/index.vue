@@ -58,6 +58,7 @@
                     dense
                     outlined
                     label="Login"
+                    @input="(val) => (formulario.login = formulario.login ? formulario.login.toUpperCase() : null)"
                   />
                 </validation-provider>
               </v-col>
@@ -83,6 +84,7 @@
                     dense
                     outlined
                     label="Nome"
+                    @input="(val) => (formulario.name = formulario.name ? formulario.name.toUpperCase() : null)"
                   />
                 </validation-provider>
               </v-col>
@@ -149,10 +151,10 @@
                   v-slot="{ errors }"
                   name="Perfil"
                   rules="required"
-                  vid="profileId"
+                  vid="description"
                 >
                   <v-autocomplete
-                    v-model="formulario.profileId"
+                    v-model="formulario.profile_id"
                     :disabled="exibicao && !inserir"
                     :error-messages="errors"
                     :hide-details="!errors.length"
@@ -177,7 +179,7 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="Senha"
-                  rules="required|max:100"
+                  rules="max:100"
                   vid="password"
                 >
                   <v-text-field
@@ -187,7 +189,6 @@
                     :error-messages="errors"
                     :hide-details="!errors.length"
                     :type="verSenha ? 'text' : 'password'"
-                    class="required"
                     dense
                     outlined
                     label="Senha"
@@ -260,24 +261,6 @@
             </v-col>
             <v-col
               cols="12"
-              lg="4"
-              md="4"
-              xs="12"
-            >
-              <v-text-field
-                v-model="filtro.name"
-                auto-focus
-                clearable
-                dense
-                hide-details
-                outlined
-                label="Nome do Usuário"
-                @click:clear="filtro.name = null, listarUser()"
-                @keydown.enter="listarUser()"
-              />
-            </v-col>
-            <v-col
-              cols="12"
               lg="3"
               md="3"
               xs="12"
@@ -292,6 +275,26 @@
                 label="Login do Usuário"
                 @click:clear="filtro.login = null, listarUser()"
                 @keydown.enter="listarUser()"
+                @input="(val) => (filtro.login = filtro.login ? filtro.login.toUpperCase() : null, listarUser())"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              lg="6"
+              md="6"
+              xs="12"
+            >
+              <v-text-field
+                v-model="filtro.name"
+                auto-focus
+                clearable
+                dense
+                hide-details
+                outlined
+                label="Nome do Usuário"
+                @click:clear="filtro.name = null, listarUser()"
+                @keydown.enter="listarUser()"
+                @input="(val) => (filtro.name = filtro.name ? filtro.name.toUpperCase() : null, listarUser())"
               />
             </v-col>
           </v-row>
@@ -305,7 +308,6 @@
         height-auto
         sem-paginacao
         sem-rodape
-        toolbar-grid
         titulo="Registros"
         visualizar
         @visualizar="exibirRegistro($event)"
@@ -317,9 +319,6 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import store from './store'
-
-const decrypt = require('xcryptig').decrypt
-const encrypt = require('xcryptig').encrypt
 
 export default {
   name: 'PaginaSettingsUser',
@@ -376,10 +375,12 @@ export default {
     },
     formulario: {
       id: null,
-      profileId: null,
       login: null,
       name: null,
-      status: null
+      email: null,
+      status: null,
+      profile_id: null,
+      password: null
     },
     enabled: [
       {
@@ -452,6 +453,20 @@ export default {
       this.loading = false
     },
 
+    async listarUser () {
+      this.loading = true
+
+      await this.listar({
+        filtro: {
+          login: this.filtro.login || undefined,
+          name: this.filtro.name || undefined,
+          profileId: this.filtro.profileId || undefined
+        }
+      })
+
+      this.loading = false
+    },
+
     async exibirRegistro (id) {
       this.loading = true
 
@@ -464,8 +479,8 @@ export default {
           name: res.name || null,
           email: res.email || null,
           status: res.status ? 1 : 0,
-          profile_id: res.type || null,
-          password: decrypt(res.password) || null
+          profile_id: res.profile_id || null,
+          password: null
         }
 
         this.senhaExibir = res.senha || null
@@ -474,20 +489,6 @@ export default {
         this.inserir = false
         this.modal = true
       }
-
-      this.loading = false
-    },
-
-    async listarUser () {
-      this.loading = true
-
-      await this.listar({
-        filtro: {
-          login: this.filtro.login || undefined,
-          name: this.filtro.name || undefined,
-          profileId: this.filtro.profileId || undefined
-        }
-      })
 
       this.loading = false
     },
@@ -504,8 +505,37 @@ export default {
       })
 
       this.filtroEditar.profileId = this.profileDropdown.find(b => b.id === profile) ? profile : null
-      console.log(this.profileDropdown)
+
       this.loading = false
+    },
+
+    async salvarRegistro () {
+      if (await this.$refs.observer.validate()) {
+        this.loading = true
+
+        let form = {
+          id: this.formulario.id || null,
+          login: this.formulario.login || null,
+          name: this.formulario.name || null,
+          email: this.formulario.email || null,
+          status: this.formulario.status ? 1 : 0,
+          profile_id: this.formulario.profile_id || null,
+          password: this.formulario.password ? this.$crypto(this.formulario.password, 'md5') : undefined
+        }
+
+        let res = ''
+
+        if (!form.id) res = await this.salvar(form)
+        else res = await this.editar(form)
+
+        if (res.message) {
+          this.resetFormulario()
+        } else if (res.erro) {
+          this.$refs.observer.setErrors(res.erro)
+        }
+
+        this.loading = false
+      }
     },
 
     resetFormulario () {
@@ -521,11 +551,12 @@ export default {
       }
       this.formulario = {
         id: null,
-        profileId: null,
         login: null,
-        password: null,
         name: null,
-        status: null
+        email: null,
+        status: null,
+        profile_id: null,
+        password: null
       }
       this.filtroEditar = {
         profileId: null
@@ -535,37 +566,7 @@ export default {
       this.inserir = false
       this.loading = false
       this.modal = false
-      this.opcoesRelacionadas = []
       this.listarUser()
-    },
-
-    async salvarRegistro () {
-      if (await this.$refs.observer.validate()) {
-        this.loading = true
-
-        let form = {
-          id: this.formulario.id || null,
-          login: this.formulario.login || null,
-          name: this.formulario.name || null,
-          email: this.formulario.email || null,
-          status: this.formulario.status ? 1 : 0,
-          profile_id: this.formulario.type || null,
-          password: (encrypt(this.formulario.password) === this.senhaExibir) ? this.senhaExibir : encrypt(this.formulario.password)
-        }
-
-        let res = ''
-
-        if (!form.id) res = await this.salvarUser(form)
-        else res = await this.editarUser(form)
-
-        if (res.mensagem) {
-          this.resetFormulario()
-        } else if (res.erro) {
-          this.$refs.observer.setErrors(res.erro)
-        }
-
-        this.loading = false
-      }
     }
   }
 }

@@ -34,7 +34,7 @@ export const listar = async ({ commit }, parametros) => {
     commit('setLoading', true)
 
     const res = await axios.get('menu', {
-      params: parametros
+      params: parametros.filtro
     })
 
     if (!res.data.erro) {
@@ -64,22 +64,6 @@ export const salvar = async ({ commit }, dados) => {
     commit('setLoading', true)
 
     const res = await axios.post('menu', dados)
-
-    return res.data
-  } finally {
-    commit('setLoading', false)
-  }
-}
-
-export const listarProfileDropdown = async ({ commit }, dados) => {
-  try {
-    commit('setLoading', true)
-
-    const res = await axios.get('profile/dropdown')
-
-    if (!res.data.erro) {
-      commit('profileDropdown', res.data)
-    }
 
     return res.data
   } finally {

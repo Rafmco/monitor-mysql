@@ -1,20 +1,36 @@
+/**
+ * @author Rafael Machado
+ * @class User
+ * @description Função Controller Class
+ * @param {this} app
+ */
 
 const validate = require('validate.js')
 
 module.exports = app => {
-  const validateSalvar = {
-    id: { presence: true, type: 'number' },
+  const validateColumns = {
     login: { presence: true, type: 'string' },
     name: { presence: true, type: 'string' },
-    email: { presence: true, email: true },
-    password: { presence: true, type: 'string' },
+    email: { presence: true, type: 'string' },
     status: { presence: true, type: 'number' },
     profile_id: { presence: true, type: 'number' }
   }
 
+  const validateSalvar = {
+    password: { presence: true, type: 'string' },
+    ...validateColumns
+  }
+
   const validateEditar = {
     id: { presence: true, type: 'integer' },
-    ...validateSalvar
+    ...validateColumns
+  }
+
+  const isUniqueConstraintError = async (err) => {
+    if (!err) return false;
+
+    var re = /^Duplicate entry/;
+    return re.test(err.sqlMessage);
   }
 
   const listar = async (req, res) => {
@@ -52,6 +68,7 @@ module.exports = app => {
   const exibir = async (req, res) => {
     try {
       const resp = await app.db('user')
+      .select('id', 'login', 'name', 'email', 'status', 'profile_id')
       .where({
         id: req.params.id
       })
@@ -65,14 +82,17 @@ module.exports = app => {
 
   const editar = async (req, res) => {
     try {
+
       const err = validate(req.body, validateEditar)
       if (err) return res.json(err)
 
       const findOne = await app.db('user')
-      .where({
-        id: req.body.id
-      })
-      if (!findOne.length) throw new Error('Usuário não encontrado')
+        .where({
+          id: req.body.id
+        })
+        .first()
+
+      if (!findOne) throw new Error('Usuário não encontrado')
 
       await app.db('user')
         .where({
@@ -110,7 +130,7 @@ module.exports = app => {
 
       return res.json({ message: 'Inserido' })
     } catch (error) {
-      return res.json({ erro: error.message })
+      return res.json({ erro: (isUniqueConstraintError(error) ? 'Login já cadastrado' : error.message) })
     }
   }
 
@@ -118,7 +138,7 @@ module.exports = app => {
     try {
       const findOne = await app.db('user')
         .where({
-          id: req.body.id
+          id: req.params.id
         })
         if (!findOne.length) throw new Error('Usuário não encontrado')
 

@@ -1,15 +1,15 @@
 <template>
   <pagina
     :cols="8"
-    :editar="exibicao && !inserir"
     :loading="loading"
+    :editar-formulario="!exibicao && !inserir"
     :formulario.sync="modal"
     :mais-opcoes="edicao"
     :salvar="(!exibicao) && (inserir || edicao)"
-    titulo-toolbar="Formulário de cadastro"
+    titulo-toolbar="Configurações"
     fechar
-    titulo="Cadastro de Perfis do Sistema"
-    subtitulo="Listagem e manutenção de Perfis do Sistema"
+    titulo="Configurações"
+    subtitulo="Perfis do Sistema"
     @cancelar="resetFormulario()"
     @editar="exibicao = false, edicao = true"
     @fechar="resetFormulario()"
@@ -44,16 +44,15 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="ID"
-                  rules="required|max:100"
+                  rules="numeric"
                   vid="id"
                 >
                   <v-text-field
                     ref="id"
                     v-model="formulario.id"
-                    :disabled="exibicao && !inserir"
+                    disabled
                     :error-messages="errors"
                     :hide-details="!errors.length"
-                    class="required"
                     dense
                     outlined
                     label="ID"
@@ -82,6 +81,7 @@
                     dense
                     outlined
                     label="Perfil"
+                    @input="(val) => (formulario.description = formulario.description ? formulario.description.toUpperCase() : null)"
                   />
                 </validation-provider>
               </v-col>
@@ -136,6 +136,89 @@
       </v-list>
     </template>
 
+    <template slot="relacionamento">
+      <tabela
+        v-if="modal"
+        :btn-editar="formulario.id && !edicaoItens"
+        :colunas="colunasMenu"
+        :desabilitado="!formulario.id || !edicaoItens"
+        :loading="loading"
+        :registros="profileMenu"
+        excluir
+        max-height="600"
+        sem-paginacao
+        sem-rodape
+        toolbar-grid
+        dense
+        titulo="Menus do Perfil"
+        @btnEditar="habilitaEdicaoItem()"
+        @excluir="deletarMenus($event)"
+      >
+        <template slot="cabecalho">
+          <v-form>
+            <validation-observer
+              ref="observerMenus"
+              v-slot="{ validate }"
+            >
+              <v-container
+                fluid
+                grid-list-xs
+              >
+                <v-row dense>
+                  <v-col
+                    cols="12"
+                    lg="3"
+                    md="3"
+                    xs="12"
+                  >
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="Menus do Perfil"
+                      rules="required"
+                      vid="menuId"
+                    >
+                      <v-autocomplete
+                        ref="edicaoItensMenuId"
+                        v-model="filtroEditar.menuId"
+                        :disabled="exibicao && !edicaoItens"
+                        :error-messages="errors"
+                        :hide-details="!errors.length"
+                        :items="menuDropdown"
+                        auto-select-first
+                        class="required"
+                        dense
+                        outlined
+                        item-text="name"
+                        item-value="id"
+                        label="Menus do Perfil"
+                      />
+                    </validation-provider>
+                  </v-col>
+                  <v-col class="text-right">
+                    <v-btn
+                      v-if="!exibicao && !inserir || edicaoItens"
+                      :disabled="!formulario.id"
+                      color="primary"
+                      dark
+                      @click="salvarItens()"
+                    >
+                      <v-icon
+                        size="20"
+                        left
+                      >
+                        mdi-arrow-down-bold-box
+                      </v-icon>
+                      Adicionar
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </validation-observer>
+          </v-form>
+        </template>
+      </tabela>
+    </template>
+
     <template slot="listagem">
       <filtro
         v-if="!modal"
@@ -165,8 +248,9 @@
                 hide-details
                 outlined
                 label="Perfil"
-                @click:clear="filtro.profileId = null, listarProfile()"
+                @click:clear="filtro.description = null, listarProfile()"
                 @keydown.enter="listarProfile()"
+                @input="(val) => (filtro.description = filtro.description ? filtro.description.toUpperCase() : null, listarProfile())"
               />
             </v-col>
           </v-row>
@@ -180,7 +264,6 @@
         height-auto
         sem-paginacao
         sem-rodape
-        toolbar-grid
         titulo="Registros"
         visualizar
         @visualizar="exibirRegistro($event)"
@@ -224,35 +307,60 @@ export default {
         value: 'obs'
       }
     ],
+    colunasMenu: [
+      {
+        text: 'Ação',
+        align: 'center',
+        sortable: false,
+        value: 'action',
+        width: '100px'
+      },
+      {
+        text: 'ID',
+        align: 'start',
+        sortable: true,
+        value: 'menu_id'
+      },
+      {
+        text: 'Menu',
+        align: 'start',
+        sortable: true,
+        value: 'menu_name'
+      },
+      {
+        text: 'URL',
+        align: 'start',
+        sortable: true,
+        value: 'menu_url'
+      },
+      {
+        text: 'Menu Pai',
+        align: 'start',
+        sortable: true,
+        value: 'menu_pai_name'
+      }
+    ],
     edicao: false,
+    edicaoItens: false,
     exibicao: false,
     filtro: {
       description: null
     },
     filtroEditar: {
-      profileId: null
+      menuId: null
     },
     formulario: {
       id: null,
       description: null,
       obs: null
     },
-    enabled: [
-      {
-        item: 0,
-        descricao: 'No'
-      },
-      {
-        item: 1,
-        descricao: 'Yes'
-      }
-    ],
     inserir: false,
     loading: false,
     modal: false,
     modalItens: false,
     modalAviso: false,
     senhaExibir: '',
+    profileMenu: [],
     store: {
       nome: 'paginaSettingsProfile',
       modulo: store
@@ -263,21 +371,12 @@ export default {
 
   computed: {
     ...mapState('paginaSettingsProfile', [
-      'profileList'
+      'profileList',
+      'menuDropdown'
     ]),
 
     filtrosPreenchidos () {
       return Object.values(this.filtro).reduce((acumulador, atual) => !!acumulador || !!atual, false)
-    }
-  },
-
-  watch: {
-    modal (valor) {
-      if (valor) {
-        setTimeout(() => {
-          this.$refs.login.focus()
-        }, 100)
-      }
     }
   },
 
@@ -287,11 +386,14 @@ export default {
 
   methods: {
     ...mapActions('paginaSettingsProfile', [
+      'listarMenuDropdown',
       'apagar',
+      'apagarMenu',
       'editar',
       'exibir',
       'listar',
-      'salvar'
+      'salvar',
+      'salvarMenu'
     ]),
 
     async deletarRegistro () {
@@ -302,6 +404,19 @@ export default {
       if (!res.erro) {
         this.resetFormulario()
       }
+
+      this.loading = false
+    },
+
+    async deletarMenus (id) {
+      this.loading = true
+
+      let res = await this.apagarMenu({
+        profileId: this.formulario.id || undefined,
+        menuId: id || undefined
+      })
+
+      if (!res.erro) this.exibirRegistro(this.formulario.id)
 
       this.loading = false
     },
@@ -317,6 +432,8 @@ export default {
           description: res.description || null,
           obs: res.obs || null
         }
+
+        this.profileMenu = res.menus
 
         this.exibicao = true
         this.inserir = false
@@ -338,28 +455,12 @@ export default {
       this.loading = false
     },
 
-    resetFormulario () {
-      this.edicao = false
-      this.exibicao = false
-      this.textoAviso = ''
-      this.modalAviso = false
-
-      this.filtro = {
-        description: null
-      }
-      this.formulario = {
-        id: null,
-        description: null,
-        obs: null
-      }
-      this.filtroEditar = {
-        profileId: null
-      }
-      this.inserir = false
-      this.loading = false
-      this.modal = false
-      this.opcoesRelacionadas = []
-      this.listarProfile()
+    habilitaEdicaoItem () {
+      this.edicaoItens = true
+      setTimeout(() => {
+        this.$refs.edicaoItensMenuId.focus()
+        this.listarMenu()
+      }, 100)
     },
 
     async salvarRegistro () {
@@ -374,10 +475,10 @@ export default {
 
         let res = ''
 
-        if (!form.id) res = await this.salvarProfile(form)
-        else res = await this.editarProfile(form)
+        if (!form.id) res = await this.salvar(form)
+        else res = await this.editar(form)
 
-        if (res.mensagem) {
+        if (res.message) {
           this.resetFormulario()
         } else if (res.erro) {
           this.$refs.observer.setErrors(res.erro)
@@ -385,6 +486,63 @@ export default {
 
         this.loading = false
       }
+    },
+
+    async salvarItens () {
+      if (await this.$refs.observerMenus.validate()) {
+        this.loading = true
+
+        let res = await this.salvarMenu({
+          menuId: this.filtroEditar.menuId || undefined,
+          profileId: this.formulario.id || undefined
+        })
+
+        if (!res.erro) this.exibirRegistro(this.formulario.id)
+
+        this.$refs.edicaoItensMenuId.focus()
+
+        this.loading = false
+      }
+    },
+
+    async listarMenu () {
+      this.loading = true
+
+      const menu = this.filtroEditar.menuId
+
+      await this.listarMenuDropdown({
+        filtro: {
+          profileId: this.formulario.profileId || undefined
+        }
+      })
+
+      this.filtroEditar.menuId = this.menuDropdown.find(b => b.id === menu) ? menu : null
+
+      this.loading = false
+    },
+
+    resetFormulario () {
+      this.edicao = false
+      this.edicaoItens = false
+      this.exibicao = false
+      this.textoAviso = ''
+      this.modalAviso = false
+
+      this.filtro = {
+        description: null
+      }
+      this.formulario = {
+        id: null,
+        description: null,
+        obs: null
+      }
+      this.filtroEditar = {
+        menuId: null
+      }
+      this.inserir = false
+      this.loading = false
+      this.modal = false
+      this.listarProfile()
     }
   }
 }

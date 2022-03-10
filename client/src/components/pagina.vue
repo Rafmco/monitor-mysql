@@ -190,6 +190,26 @@
               </v-row>
             </v-card-actions>
           </v-card>
+          <v-card
+            v-if="formulario"
+            class="mt-2"
+            flat
+          >
+            <v-toolbar
+              v-if="tituloRelacionamento"
+              color="primary"
+              dark
+              flat
+              height="45"
+            >
+              <v-toolbar-title>
+                {{ tituloRelacionamento }}
+              </v-toolbar-title>
+            </v-toolbar>
+            <v-card-text class="pa-0">
+              <slot name="relacionamento" />
+            </v-card-text>
+          </v-card>
         </v-container>
       </v-col>
     </v-row>
@@ -221,7 +241,6 @@ export default {
       default: 12,
       type: Number
     },
-
     formulario: {
       required: true,
       type: Boolean
@@ -238,12 +257,10 @@ export default {
       default: '',
       type: String
     },
-
     maisOpcoes: {
       default: false,
       type: Boolean
     },
-
     editarFormulario: {
       default: true,
       type: Boolean

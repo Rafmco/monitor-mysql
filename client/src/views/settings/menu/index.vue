@@ -1,15 +1,15 @@
 <template>
   <pagina
     :cols="8"
-    :editar="exibicao && !inserir"
     :loading="loading"
+    :editar-formulario="!exibicao && !inserir"
     :formulario.sync="modal"
     :mais-opcoes="edicao"
     :salvar="(!exibicao) && (inserir || edicao)"
-    titulo-toolbar="Formulário de cadastro"
+    titulo-toolbar="Configurações"
     fechar
-    titulo="Cadastro de Menus do Sistema"
-    subtitulo="Listagem e manutenção de Menus do Sistema"
+    titulo="Configurações"
+    subtitulo="Menus do Sistema"
     @cancelar="resetFormulario()"
     @editar="exibicao = false, edicao = true"
     @fechar="resetFormulario()"
@@ -44,16 +44,15 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="ID"
-                  rules="required|max:100"
+                  rules="numeric"
                   vid="id"
                 >
                   <v-text-field
                     ref="id"
                     v-model="formulario.id"
-                    :disabled="exibicao && !inserir"
+                    disabled
                     :error-messages="errors"
                     :hide-details="!errors.length"
-                    class="required"
                     dense
                     outlined
                     label="ID"
@@ -166,7 +165,7 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="Ordem"
-                  rules="required"
+                  rules="required|numeric"
                   vid="order"
                 >
                   <v-text-field
@@ -190,7 +189,7 @@
                 <validation-provider
                   v-slot="{ errors }"
                   name="ID Menu Pai"
-                  rules="required"
+                  rules="numeric"
                   vid="parent_id"
                 >
                   <v-text-field
@@ -198,7 +197,6 @@
                     :disabled="exibicao && !inserir"
                     :error-messages="errors"
                     :hide-details="!errors.length"
-                    class="required"
                     dense
                     outlined
                     label="ID Menu Pai"
@@ -231,90 +229,6 @@
       </v-list>
     </template>
 
-    <template slot="relacionamento">
-      <tabela
-        v-if="modal"
-        :btn-editar="formulario.id && !edicaoItens"
-        :colunas="colunasProfile"
-        :desabilitado="!formulario.id || !edicaoItens"
-        :loading="loading"
-        :registros="profileMenu"
-        excluir
-        max-height="600"
-        sem-paginacao
-        sem-rodape
-        toolbar-grid
-        dense
-        titulo="Bancos do Usuário"
-        @btnEditar="habilitaEdicaoItem()"
-        @excluir="deletarBancos($event)"
-        @editar="exibirItem($event)"
-      >
-        <template slot="cabecalho">
-          <v-form>
-            <validation-observer
-              ref="observerBancos"
-              v-slot="{ validate }"
-            >
-              <v-container
-                fluid
-                grid-list-xs
-              >
-                <v-row dense>
-                  <v-col
-                    cols="12"
-                    lg="3"
-                    md="3"
-                    xs="12"
-                  >
-                    <validation-provider
-                      v-slot="{ errors }"
-                      name="Perfis do Menu"
-                      rules="required"
-                      vid="profileId"
-                    >
-                      <v-autocomplete
-                        ref="edicaoItensProfileId"
-                        v-model="filtroEditar.profileId"
-                        :disabled="exibicao && !edicaoItens"
-                        :error-messages="errors"
-                        :hide-details="!errors.length"
-                        :items="profileDropdown"
-                        auto-select-first
-                        class="required"
-                        dense
-                        outlined
-                        item-text="nome"
-                        item-value="id"
-                        label="Perfis do Menu"
-                      />
-                    </validation-provider>
-                  </v-col>
-                  <v-col class="text-right">
-                    <v-btn
-                      v-if="!exibicao && !inserir || edicaoItens"
-                      :disabled="!formulario.id"
-                      color="primary"
-                      dark
-                      @click="salvarItens()"
-                    >
-                      <v-icon
-                        size="20"
-                        left
-                      >
-                        mdi-arrow-down-bold-box
-                      </v-icon>
-                      Adicionar
-                    </v-btn>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </validation-observer>
-          </v-form>
-        </template>
-      </tabela>
-    </template>
-
     <template slot="listagem">
       <filtro
         v-if="!modal"
@@ -333,27 +247,6 @@
           >
             <v-col
               cols="12"
-              lg="3"
-              md="3"
-              xs="12"
-            >
-              <v-autocomplete
-                v-model="filtro.profileId"
-                :items="profileDropdown"
-                clearable
-                dense
-                hide-details
-                item-text="desc"
-                item-value="id"
-                outlined
-                label="Perfis do Menu"
-                placeholder="Selecione um Perfil"
-                @click:clear="filtro.profileId = null, listarMenu()"
-                @keydown.enter="listarMenu()"
-              />
-            </v-col>
-            <v-col
-              cols="12"
               lg="4"
               md="4"
               xs="12"
@@ -368,6 +261,7 @@
                 label="Menu"
                 @click:clear="filtro.name = null, listarMenu()"
                 @keydown.enter="listarMenu()"
+                @input="(val) => listarMenu()"
               />
             </v-col>
           </v-row>
@@ -381,7 +275,6 @@
         height-auto
         sem-paginacao
         sem-rodape
-        toolbar-grid
         titulo="Registros"
         visualizar
         @visualizar="exibirRegistro($event)"
@@ -449,29 +342,7 @@ export default {
         value: 'parent_id'
       }
     ],
-    colunasProfile: [
-      {
-        text: 'Ação',
-        align: 'center',
-        sortable: false,
-        value: 'action',
-        width: '100px'
-      },
-      {
-        text: 'ID',
-        align: 'left',
-        sortable: true,
-        value: 'id'
-      },
-      {
-        text: 'Perfil',
-        align: 'left',
-        sortable: true,
-        value: 'fkProfile.description'
-      }
-    ],
     edicao: false,
-    edicaoItens: false,
     exibicao: false,
     filtro: {
       profileId: null,
@@ -504,7 +375,6 @@ export default {
 
   computed: {
     ...mapState('paginaSettingsMenu', [
-      'profileDropdown',
       'menuList'
     ]),
 
@@ -513,18 +383,7 @@ export default {
     }
   },
 
-  watch: {
-    modal (valor) {
-      if (valor) {
-        setTimeout(() => {
-          this.$refs.login.focus()
-        }, 100)
-      }
-    }
-  },
-
   created () {
-    this.listarProfile()
     this.listarMenu()
   },
 
@@ -534,14 +393,13 @@ export default {
       'editar',
       'exibir',
       'listar',
-      'salvar',
-      'listarProfileDropdown'
+      'salvar'
     ]),
 
     async deletarRegistro () {
       this.loading = true
 
-      let res = await this.deletarMenu(this.formulario.id)
+      let res = await this.apagar(this.formulario.id)
 
       if (!res.erro) {
         this.resetFormulario()
@@ -549,15 +407,7 @@ export default {
 
       this.loading = false
     },
-    async deletarProfile (id) {
-      this.loading = true
 
-      let res = await this.deletarProfile(id)
-
-      if (!res.erro) this.exibirRegistro(this.formulario.id)
-
-      this.loading = false
-    },
     async exibirRegistro (id) {
       this.loading = true
 
@@ -584,14 +434,6 @@ export default {
       this.loading = false
     },
 
-    habilitaEdicaoItem () {
-      this.edicaoItens = true
-      setTimeout(() => {
-        this.$refs.edicaoItensProfileId.focus()
-        this.listarProfile()
-      }, 100)
-    },
-
     async listarMenu () {
       this.loading = true
 
@@ -605,25 +447,8 @@ export default {
       this.loading = false
     },
 
-    async listarProfile () {
-      this.loading = true
-
-      const profile = this.filtroEditar.profileId
-
-      await this.listarProfileDropdown({
-        filtro: JSON.stringify({
-          profileId: this.formulario.profileId || undefined
-        })
-      })
-
-      this.filtroEditar.profileId = this.profileDropdown.find(b => b.id === profile) ? profile : null
-
-      this.loading = false
-    },
-
     resetFormulario () {
       this.edicao = false
-      this.edicaoItens = false
       this.exibicao = false
       this.textoAviso = ''
       this.modalAviso = false
@@ -647,7 +472,6 @@ export default {
       this.inserir = false
       this.loading = false
       this.modal = false
-      this.opcoesRelacionadas = []
       this.listarMenu()
     },
 
@@ -667,31 +491,14 @@ export default {
 
         let res = ''
 
-        if (!form.id) res = await this.salvarMenu(form)
-        else res = await this.editarMenu(form)
+        if (!form.id) res = await this.salvar(form)
+        else res = await this.editar(form)
 
-        if (res.mensagem) {
+        if (res.message) {
           this.resetFormulario()
         } else if (res.erro) {
           this.$refs.observer.setErrors(res.erro)
         }
-
-        this.loading = false
-      }
-    },
-
-    async salvarItens () {
-      if (await this.$refs.observerBancos.validate()) {
-        this.loading = true
-
-        let res = await this.salvarProfile({
-          profileId: this.filtroEditar.profileId || undefined,
-          menuId: this.formulario.id || undefined
-        })
-
-        if (!res.erro) this.exibirRegistro(this.formulario.id)
-
-        this.$refs.edicaoItensProfileId.focus()
 
         this.loading = false
       }

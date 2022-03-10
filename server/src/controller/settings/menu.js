@@ -4,23 +4,54 @@
  * @description Função Controller Class
  * @param {this} app
  */
+
+const validate = require('validate.js')
+
 module.exports = app => {
 
   const validateSalvar = {
-    id: { presence: true, type: 'number' },
     name: { presence: true, type: 'string' },
     description: { presence: true, type: 'string' },
     url: { presence: true, type: 'string' },
     icon: { presence: true, type: 'string' },
-    icon_color: { presence: false, type: 'string' },
-    order: { presence: true, type: 'number' },
-    parent_id: { presence: false, type: 'number' },
+    // icon_color: { presence: false, type: 'string' },
+    order: { presence: true, type: 'string' }
+    // parent_id: { presence: false, type: 'integer' },
   }
 
   const validateEditar = {
     id: { presence: true, type: 'integer' },
     ...validateSalvar
   }
+
+  const isUniqueConstraintError = async (err) => {
+    if (!err) return false;
+
+    var re = /^Duplicate entry/;
+    return re.test(err.sqlMessage);
+  }
+
+  const dropdown = async (_req, res) => {
+    try {
+      const findAll = await app.db("menu")
+        .column(
+          "menu.id",
+          "menu.name",
+          "menu.url",
+          "menu.parent_id",
+          "menu_pai.name as menu_pai_name"
+        )
+        .select()
+        .leftJoin('menu as menu_pai', 'menu_pai.id', 'menu.parent_id')
+        .where({
+          'menu.deleted_at': null
+        });
+
+      return res.json(findAll);
+    } catch (error) {
+      return res.json({ erro: error });
+    }
+  };
 
   const listar = async (req, res) => {
     try {
@@ -63,7 +94,9 @@ module.exports = app => {
       .where({
         id: req.body.id
       })
-      if (!findOne.length) throw new Error('Menu não encontrado')
+      .first()
+
+      if (!findOne) throw new Error('Menu não encontrado')
 
       await app.db('menu')
         .where({
@@ -103,7 +136,7 @@ module.exports = app => {
 
       return res.json({ message: 'Inserido' })
     } catch (error) {
-      return res.json({ erro: error.message })
+      return res.json({ erro: (isUniqueConstraintError(error) ? 'Menu já cadastrado' : error.message) })
     }
   }
 
@@ -111,7 +144,7 @@ module.exports = app => {
     try {
       const findOne = await app.db('menu')
         .where({
-          id: req.body.id
+          id: req.params.id
         })
         if (!findOne.length) throw new Error('Menu não encontrado')
 
@@ -129,6 +162,7 @@ module.exports = app => {
   }
 
   return {
+    dropdown,
     listar,
     exibir,
     editar,
