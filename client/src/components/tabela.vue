@@ -98,7 +98,7 @@
         :small="dense"
         class="ml-2 mr-3"
         color="secondary"
-        @click="$emit('editar', item.id)"
+        @click="$emit('editar', item)"
       >
         mdi-pencil
       </v-icon>

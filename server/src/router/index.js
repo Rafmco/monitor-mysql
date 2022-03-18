@@ -13,13 +13,13 @@ module.exports = app => {
   app.post('/menu',         app.src.controller.settings.menu.salvar)
   app.delete('/menu/:id',   app.src.controller.settings.menu.deletar)
 
-  app.get('/profile/dropdown',       app.src.controller.settings.profile.dropdown)
-  app.get('/profile',                app.src.controller.settings.profile.listar)
-  app.get('/profile/:id',            app.src.controller.settings.profile.exibir)
-  app.put('/profile',                app.src.controller.settings.profile.editar)
-  app.post('/profile',               app.src.controller.settings.profile.salvar)
-  app.post('/profile/salvarMenu',    app.src.controller.settings.profile.salvarMenu)
-  app.delete('/profile/:id',         app.src.controller.settings.profile.deletar)
+  app.get('/profile/dropdown',     app.src.controller.settings.profile.dropdown)
+  app.get('/profile',              app.src.controller.settings.profile.listar)
+  app.get('/profile/:id',          app.src.controller.settings.profile.exibir)
+  app.put('/profile',              app.src.controller.settings.profile.editar)
+  app.post('/profile',             app.src.controller.settings.profile.salvar)
+  app.post('/profile/salvarMenu',  app.src.controller.settings.profile.salvarMenu)
+  app.delete('/profile/:id',       app.src.controller.settings.profile.deletar)
   app.post('/profile/deletarMenu', app.src.controller.settings.profile.deletarMenu)
 
   app.get('/user',        app.src.controller.settings.user.listar)
@@ -31,6 +31,10 @@ module.exports = app => {
   /***/
   app.get('/monitor/users/usersList',     app.src.controller.monitor.users.usersList)
   app.get('/monitor/users/rolesDropdown', app.src.controller.monitor.users.rolesDropdown)
+  app.get('/monitor/users/showGrants',    app.src.controller.monitor.users.showGrants)
+  app.get('/monitor/users/showCreate',    app.src.controller.monitor.users.showCreate)
+  app.get('/monitor/users/createUser',    app.src.controller.monitor.users.createUser)
+  app.get('/monitor/users/dropUser',      app.src.controller.monitor.users.dropUser)
 
   app.get('/monitor/dashboard/hostInfo',         app.src.controller.monitor.dashboard.hostInfo)
   app.get('/monitor/dashboard/instanceInfo',     app.src.controller.monitor.dashboard.instanceInfo)
@@ -42,8 +46,11 @@ module.exports = app => {
   app.get('/monitor/dashboard/statementsCount',  app.src.controller.monitor.dashboard.statementsCount)
 
   app.get('/monitor/variables/systemVariablesList', app.src.controller.monitor.variables.systemVariablesList)
+  app.get('/monitor/variables/setVariable',         app.src.controller.monitor.variables.setVariable)
 
-  app.get('/monitor/events/eventsList', app.src.controller.monitor.events.eventsList)
+  app.get('/monitor/events/eventsList',  app.src.controller.monitor.events.eventsList)
+  app.get('/monitor/events/showCreate',  app.src.controller.monitor.events.showCreate)
+  app.get('/monitor/events/createEvent', app.src.controller.monitor.events.createEvent)
 
   app.get('/monitor/schemas/schemasDropdown', app.src.controller.monitor.schemas.schemasDropdown)
 }

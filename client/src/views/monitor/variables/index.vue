@@ -68,7 +68,6 @@
                         >
                           <v-text-field
                             v-model="filtro.name"
-                            v-uppercase
                             auto-focus
                             clearable
                             dense
@@ -77,6 +76,7 @@
                             label="Nome"
                             @click:clear="filtro.name = null, listarSystemVariablesList()"
                             @keydown.enter="listarSystemVariablesList()"
+                            @input="(val) => (filtro.name = filtro.name ? filtro.name.toUpperCase() : null, listarSystemVariablesList())"
                           />
                         </v-col>
                         <v-col
@@ -100,6 +100,184 @@
                       </v-row>
                     </template>
                   </filtro>
+                  <modal
+                    :modal="modalEditar"
+                    titulo="Editar Valor da Variável"
+                    largura="500"
+                    @fechar="resetEditar()"
+                  >
+                    <v-form>
+                      <validation-observer
+                        ref="observerEditar"
+                        v-slot="{ validate }"
+                      >
+                        <v-container
+                          fluid
+                          grid-list-md
+                        >
+                          <v-row dense>
+                            <v-col cols="12">
+                              <v-text-field
+                                v-model="formulario.variable_name"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="variable_name"
+                              />
+                            </v-col>
+                          </v-row>
+                          <v-divider />
+                          <v-row dense>
+                            <v-col cols="6">
+                              <validation-provider
+                                v-slot="{ errors }"
+                                name="Session Value"
+                                rules="max:500"
+                                vid="session_value"
+                              >
+                                <v-text-field
+                                  v-model="formulario.session_value"
+                                  dense
+                                  disabled
+                                  filled
+                                  hide-details
+                                  label="session_value"
+                                />
+                              </validation-provider>
+                            </v-col>
+                            <v-col cols="6">
+                              <validation-provider
+                                v-slot="{ errors }"
+                                name="Global Value"
+                                rules="required|max:500"
+                                vid="global_value"
+                              >
+                                <v-text-field
+                                  v-model="formulario.global_value"
+                                  dense
+                                  filled
+                                  hide-details
+                                  label="global_value"
+                                />
+                              </validation-provider>
+                            </v-col>
+                          </v-row>
+                          <v-divider />
+                          <v-row dense>
+                            <v-col cols="6">
+                              <v-text-field
+                                v-model="formulario.default_value"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="default_value"
+                              />
+                            </v-col>
+                            <v-col cols="6">
+                              <v-text-field
+                                v-model="formulario.variable_type"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="variable_type"
+                              />
+                            </v-col>
+                          </v-row>
+                          <v-divider />
+                          <v-row dense>
+                            <v-col cols="6">
+                              <v-text-field
+                                v-model="formulario.numeric_min_value"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="numeric_min_value"
+                              />
+                            </v-col>
+                            <v-col cols="6">
+                              <v-text-field
+                                v-model="formulario.numeric_max_value"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="numeric_max_value"
+                              />
+                            </v-col>
+                          </v-row>
+                          <v-divider />
+                          <v-row dense>
+                            <v-col cols="9">
+                              <v-text-field
+                                v-model="formulario.enum_value_list"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="enum_value_list"
+                              />
+                            </v-col>
+                            <v-col cols="3">
+                              <v-text-field
+                                v-model="formulario.read_only"
+                                dense
+                                disabled
+                                filled
+                                hide-details
+                                label="read_only"
+                              />
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                        <v-divider />
+                        <v-row
+                          class="my-1 mx-1"
+                          dense
+                        >
+                          <v-spacer />
+                          <v-btn
+                            color="primary"
+                            dark
+                            small
+                            @click="salvarEdicao()"
+                          >
+                            <v-icon
+                              size="20"
+                              left
+                            >
+                              mdi-content-save
+                            </v-icon>
+                            Salvar
+                          </v-btn>
+                          <v-tooltip bottom>
+                            <template v-slot:activator="{ on }">
+                              <v-btn
+                                class="mx-2"
+                                color="error"
+                                dark
+                                small
+                                v-on="on"
+                                @click="resetEditar()"
+                              >
+                                <v-icon
+                                  size="20"
+                                  left
+                                >
+                                  mdi-cancel
+                                </v-icon>
+                                Cancelar
+                              </v-btn>
+                            </template>
+                            <span>(shift + esc)</span>
+                          </v-tooltip>
+                        </v-row>
+                      </validation-observer>
+                    </v-form>
+                  </modal>
                   <tabela
                     :colunas="colunasSystemVariablesList"
                     :loading="loading"
@@ -109,7 +287,9 @@
                     toolbar-grid
                     class="ma-0"
                     dense
+                    editar
                     v-on="on"
+                    @editar="abrirEditar($event)"
                   />
                 </template>
                 <span>Número de Lotes de instruções SQL que são recebidas pelo Servidor, por segundo.</span>
@@ -178,6 +358,12 @@ export default {
       '#64DD17', '#FFEA00', '#F44336'
     ],
     colunasSystemVariablesList: [
+      {
+        align: 'center',
+        sortable: false,
+        value: 'action',
+        width: '30px'
+      },
       {
         text: 'variable_name',
         caption: 'System variable name',
@@ -289,6 +475,18 @@ export default {
       name: null,
       comment: null
     },
+    formulario: {
+      variable_name: null,
+      session_value: null,
+      global_value: null,
+      default_value: null,
+      variable_type: null,
+      numeric_min_value: null,
+      numeric_max_value: null,
+      enum_value_list: null,
+      read_only: null
+    },
+    modalEditar: false,
     setIntervalConsultas: null,
     store: {
       nome: 'paginaMonitorSystemVariables',
@@ -350,7 +548,8 @@ export default {
 
   methods: {
     ...mapActions('paginaMonitorSystemVariables', [
-      'listarSystemVariablesList'
+      'listarSystemVariablesList',
+      'setVariable'
     ]),
 
     async refreshData (interval) {
@@ -363,6 +562,57 @@ export default {
 
     async refreshProcess (interval) {
       await this.listarSystemVariablesList()
+    },
+
+    async abrirEditar (item) {
+      this.formulario = {
+        variable_name: item.variable_name,
+        session_value: item.session_value,
+        global_value: item.global_value,
+        default_value: item.default_value,
+        variable_type: item.variable_type,
+        numeric_min_value: item.numeric_min_value,
+        numeric_max_value: item.numeric_max_value,
+        enum_value_list: item.enum_value_list,
+        read_only: item.read_only
+      }
+
+      this.modalEditar = true
+    },
+
+    async salvarEdicao () {
+      if (await this.$refs.observerEditar.validate()) {
+        this.loading = true
+
+        let res = await this.setVariable({
+          variable: this.formulario.variable_name,
+          value: this.formulario.global_value
+        })
+
+        if (!res.erro) {
+          this.resetEditar()
+        } else if (typeof res.erro === 'object') {
+          this.$refs.observerEditar.setErrors(res.erro)
+        }
+
+        this.loading = false
+      }
+    },
+
+    resetEditar () {
+      this.formulario = {
+        variable_name: null,
+        session_value: null,
+        global_value: null,
+        default_value: null,
+        variable_type: null,
+        numeric_min_value: null,
+        numeric_max_value: null,
+        enum_value_list: null,
+        read_only: null
+      }
+
+      this.modalEditar = false
     }
   }
 }

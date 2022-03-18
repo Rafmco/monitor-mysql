@@ -14,7 +14,20 @@ module.exports = app => {
     }
   }
 
+  const setVariable = async (req, res) => {
+    try {
+      const sql = `SET GLOBAL `+ req.query.variable +` = '`+ req.query.value +`';`;
+
+      const sqlQuery = await app.db.raw(sql);
+      // console.log(sqlQuery[0]);
+      return res.json(sqlQuery[0][0]);
+    } catch (error) {
+      return res.json({ erro: error.message });
+    }
+  }
+
   return {
-    systemVariablesList
+    systemVariablesList,
+    setVariable
   }
 }

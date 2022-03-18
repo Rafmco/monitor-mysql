@@ -15,3 +15,15 @@ export const listarSystemVariablesList = async ({ commit }, filtro) => {
     return error
   }
 }
+
+export const setVariable = async ({ commit }, dados) => {
+  try {
+    const res = await axios.get('monitor/variables/setVariable', {
+      params: dados
+    })
+
+    return res.data
+  } catch (error) {
+    return error
+  }
+}
