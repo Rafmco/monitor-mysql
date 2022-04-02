@@ -14,6 +14,9 @@ export default {
 
     state.eventsList = param
   },
+  showCreate (state, param) {
+    state.showCreate = param
+  },
 
   reset: () => {}
 }

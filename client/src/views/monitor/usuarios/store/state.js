@@ -1,4 +1,6 @@
 export default {
+  usersList: [],
   rolesDropdown: [],
-  usersList: []
+  showGrants: [],
+  showCreate: []
 }

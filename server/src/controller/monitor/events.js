@@ -14,7 +14,36 @@ module.exports = app => {
     }
   }
 
+  const showCreate = async (req, res) => {
+    try {
+      const sql = `SHOW CREATE EVENT audit.`+ req.query.event_name +`;`;
+      // console.log(sql);
+      const sqlQuery = await app.db.raw(sql);
+      // console.log(sqlQuery[0][0]);
+      return res.json(sqlQuery[0][0]);
+    } catch (error) {
+      return res.json({ erro: error });
+    }
+  }
+
+  const createEvent = async (req, res) => {
+    try {
+      const sql = `CREATE EVENT audit.`+ req.query.event_name +
+        ` ON SCHEDULE `+ req.query.schedule +
+        (req.query.comment ? ` COMMENT '`+ req.query.comment +`'` : ``) +
+        ` DO `+ req.query.statement +`;`;
+      console.log(sql);
+      // const sqlQuery = await app.db.raw(sql);
+      // console.log(sqlQuery[0]);
+      return res.json(sqlQuery[0][0]);
+    } catch (error) {
+      return res.json({ erro: error.message });
+    }
+  }
+
   return {
-    eventsList
+    eventsList,
+    showCreate,
+    createEvent
   }
 }

@@ -5,7 +5,7 @@
       :formulario="false"
       titulo-toolbar="Monitoramento"
       titulo="Monitoramento"
-      :subtitulo="header"
+      subtitulo="Dashboards"
       @fechar="resetFormulario()"
     >
       <template slot="listagem">
@@ -23,9 +23,52 @@
             <v-col
               id="Col1"
               cols="12"
-              lg="6"
-              md="6"
-              xs="6"
+              lg="2"
+              md="2"
+              xs="2"
+            >
+              <v-card
+                outlined
+              >
+                <!-- max-width="450" -->
+                <v-list-item three-line>
+                  <v-card-title
+                    class="text-button"
+                  >
+                    {{ hostInfo[0] ? hostInfo[0]['hostname'] : '' }}
+                  </v-card-title>
+                  <v-list-item-content>
+                    <div class="text-overline text-center">
+                      {{ instanceInfo[0] ? instanceInfo[0]['version'] : '' }}
+                    </div>
+                    <v-list-item-title
+                      class="text-body-2 text-center"
+                    >
+                      <div>
+                        {{ 'Uptime ' + (instanceInfo[0] ? instanceInfo[0]['uptime_days'] : '') + ' Day(s)' }}
+                      </div>
+                    </v-list-item-title>
+                    <v-list-item-title
+                      class="text-body-2 text-center"
+                    >
+                      {{ instanceInfo[0] ? instanceInfo[0]['up_since'] : '' }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                  <!-- <v-list-item-avatar
+                    tile
+                    size="80"
+                    color="grey"
+                  ></v-list-item-avatar> -->
+                </v-list-item>
+              </v-card>
+            </v-col>
+            <!-- Row1Col2 -->
+            <v-col
+              id="Col2"
+              cols="12"
+              lg="4"
+              md="4"
+              xs="4"
             >
               <!-- <v-row
                 id="Col1Row1"
@@ -35,14 +78,14 @@
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <tabela
-                    :colunas="colunasUsersList"
+                    :colunas="colunasDbSizeList"
                     :loading="loading"
-                    :registros="usersList"
-                    titulo="Usuários"
+                    :registros="dbSizeList"
+                    :items-per-page="5"
+                    titulo="Bancos de Dados"
                     toolbar-grid
                     class="ma-0"
                     dense
-                    v-on="on"
                   />
                 </template>
                 <span>Número de Lotes de instruções SQL que são recebidas pelo Servidor, por segundo.</span>
@@ -69,7 +112,7 @@
                 dense
               /> -->
             </v-col>
-            <!-- Row1Col2 -->
+            <!-- Row1Col3 -->
             <v-col
               id="Col2"
               cols="12"
@@ -83,13 +126,15 @@
                 dense
               > -->
               <tabela
-                :colunas="colunasDbSizeList"
+                :colunas="colunasUsersList"
                 :loading="loading"
-                :registros="dbSizeList"
-                titulo="Bancos de Dados"
+                :registros="usersList"
+                :items-per-page="5"
+                titulo="Usuários"
                 toolbar-grid
                 class="ma-0"
                 dense
+                v-on="on"
               />
               <!-- </v-row>
               <v-row
@@ -114,6 +159,7 @@
               /> -->
             </v-col>
           </v-row>
+          <!-- Row 2 -->
           <v-row
             id="Row2"
             class="align-start pa-0"
@@ -121,6 +167,64 @@
           >
             <v-col
               id="Row2Col1"
+              cols="9"
+              lg="4"
+              md="5"
+              xs="6"
+            >
+              <chartkick
+                id="ConnectionsCount"
+                :dados="connectionsCount"
+                :colors="colorsChart"
+                legend="top"
+                titulo="Conexões"
+                altura="230px"
+                class="pa-0"
+              />
+            </v-col>
+            <v-col
+              id="Row2Col2"
+              cols="9"
+              lg="4"
+              md="5"
+              xs="6"
+            >
+              <chartkick
+                id="BytesCount"
+                :dados="bytesCount"
+                :colors="colorsChart"
+                legend="top"
+                titulo="Tráfego de Rede"
+                altura="230px"
+                class="pa-0"
+              />
+            </v-col>
+            <v-col
+              id="Row2Col3"
+              cols="9"
+              lg="4"
+              md="5"
+              xs="6"
+            >
+              <chartkick
+                id="StatementsCount"
+                :dados="statementsCount"
+                :colors="colorsChart"
+                legend="top"
+                titulo="Statements"
+                altura="230px"
+                class="pa-0"
+              />
+            </v-col>
+          </v-row>
+          <!-- Row 3 -->
+          <v-row
+            id="Row3"
+            class="align-start pa-0"
+            dense
+          >
+            <v-col
+              id="Row3Col1"
               cols="24"
               lg="12"
               md="10"
@@ -141,63 +245,6 @@
                 </template>
                 <span>Número de Lotes de instruções SQL que são recebidas pelo Servidor, por segundo.</span>
               </v-tooltip>
-            </v-col>
-          </v-row>
-          <v-row
-            id="Row3"
-            class="align-start pa-0"
-            dense
-          >
-            <v-col
-              id="Row3Col1"
-              cols="9"
-              lg="4"
-              md="5"
-              xs="6"
-            >
-              <chartkick
-                id="ConnectionsCount"
-                :dados="connectionsCount"
-                :colors="colorsChart"
-                legend="top"
-                titulo="Conexões"
-                altura="230px"
-                class="pa-0"
-              />
-            </v-col>
-            <v-col
-              id="Row3Col2"
-              cols="9"
-              lg="4"
-              md="5"
-              xs="6"
-            >
-              <chartkick
-                id="BytesCount"
-                :dados="bytesCount"
-                :colors="colorsChart"
-                legend="top"
-                titulo="Tráfego de Rede"
-                altura="230px"
-                class="pa-0"
-              />
-            </v-col>
-            <v-col
-              id="Row3Col3"
-              cols="9"
-              lg="4"
-              md="5"
-              xs="6"
-            >
-              <chartkick
-                id="StatementsCount"
-                :dados="statementsCount"
-                :colors="colorsChart"
-                legend="top"
-                titulo="Statements"
-                altura="230px"
-                class="pa-0"
-              />
             </v-col>
           </v-row>
         </v-card>
@@ -270,8 +317,7 @@ export default {
         text: 'Roles',
         align: 'start',
         sortable: true,
-        value: 'admin_roles',
-        width: 345
+        value: 'admin_roles'
       },
       // {
       //   text: 'is_role',
@@ -303,8 +349,7 @@ export default {
         text: 'Index (MB)',
         align: 'start',
         sortable: true,
-        value: 'INDEX_MB',
-        width: 425
+        value: 'INDEX_MB'
       },
       {
         text: 'Total (MB)',
@@ -429,14 +474,7 @@ export default {
       'connectionsCount',
       'bytesCount',
       'statementsCount'
-    ]),
-
-    header () {
-      return (this.hostInfo[0] ? this.hostInfo[0]['hostname'] : '') + ' / ' +
-        (this.instanceInfo[0] ? this.instanceInfo[0]['version'] : '') + ' / ' +
-        ' Iniciado em: ' + (this.instanceInfo[0] ? this.instanceInfo[0]['up_since'] : '') + ' (' +
-        (this.instanceInfo[0] ? this.instanceInfo[0]['uptime_days'] : '') + ' d)'
-    }
+    ])
   },
 
   async created () {
@@ -453,7 +491,7 @@ export default {
       await this.listarStatementsCount()
 
       this.loading = false
-    }, 200)
+    }, 1000)
 
     this.setIntervalProcess = setInterval(() => {
       this.refreshProcess()

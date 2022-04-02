@@ -1,4 +1,5 @@
 export default {
   schemasDropdown: [],
-  eventsList: []
+  eventsList: [],
+  showCreate: []
 }
