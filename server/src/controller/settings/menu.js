@@ -57,7 +57,13 @@ module.exports = app => {
     try {
       const resp = await app.db('menu')
         .select('id', 'name', 'description', 'url', 'icon', 'order', 'icon_color', 'parent_id')
-        .orderBy(req.query.orderBy || 'id')
+        .modify(function(queryBuilder) {
+          if (req.query.orderBy) {
+            queryBuilder.orderBy(req.query.orderBy)
+          }
+          else
+            queryBuilder.orderByRaw('coalesce(??, ??), ??', ['parent_id', 'order', 'order'])
+          })
         .whereNull('deleted_at')
         .modify(function(queryBuilder) {
           if (req.query.name) {
