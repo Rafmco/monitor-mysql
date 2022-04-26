@@ -32,14 +32,14 @@ export const listarInstanceInfo = async ({ commit }, filtro) => {
   }
 }
 
-export const listarUsersList = async ({ commit }, filtro) => {
+export const listarConnectedUsersList = async ({ commit }, filtro) => {
   try {
-    const res = await axios.get('monitor/dashboard/usersList', {
+    const res = await axios.get('monitor/dashboard/connectedUsersList', {
       params: filtro
     })
 
     if (!res.data.erro) {
-      commit('usersList', res.data)
+      commit('connectedUsersList', res.data)
     }
 
     return res.data

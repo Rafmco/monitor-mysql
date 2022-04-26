@@ -22,9 +22,9 @@
         }
     }
 
-    const usersList = async (req, res) => {
+    const connectedUsersList = async (req, res) => {
         try {
-            const sql = `CALL audit.sp_monitor_report_users();`;
+            const sql = `CALL audit.sp_monitor_connected_users_list;`;
 
             const sqlQuery = await app.db.raw(sql);
 
@@ -97,7 +97,7 @@
     return {
         hostInfo,
         instanceInfo,
-        usersList,
+        connectedUsersList,
         dbSizeList,
         processList,
         connectionsCount,

@@ -13,8 +13,8 @@ export default {
     state.instanceInfo = param
   },
 
-  usersList (state, param) {
-    state.usersList = Object.values(param)
+  connectedUsersList (state, param) {
+    state.connectedUsersList = Object.values(param)
   },
 
   dbSizeList (state, param) {

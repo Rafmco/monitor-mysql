@@ -66,9 +66,9 @@
             <v-col
               id="Col2"
               cols="12"
-              lg="4"
-              md="4"
-              xs="4"
+              lg="5"
+              md="5"
+              xs="5"
             >
               <!-- <v-row
                 id="Col1Row1"
@@ -116,9 +116,9 @@
             <v-col
               id="Col2"
               cols="12"
-              lg="6"
-              md="6"
-              xs="6"
+              lg="5"
+              md="5"
+              xs="5"
             >
               <!-- <v-row
                 id="Col2Row1"
@@ -126,15 +126,14 @@
                 dense
               > -->
               <tabela
-                :colunas="colunasUsersList"
+                :colunas="colunasConnectedUsersList"
                 :loading="loading"
-                :registros="usersList"
+                :registros="connectedUsersList"
                 :items-per-page="5"
-                titulo="Usuários"
+                titulo="Usuários Conectados"
                 toolbar-grid
                 class="ma-0"
                 dense
-                v-on="on"
               />
               <!-- </v-row>
               <v-row
@@ -268,7 +267,7 @@ export default {
     colorsCards: [
       '#64DD17', '#FFEA00', '#F44336'
     ],
-    colunasUsersList: [
+    colunasConnectedUsersList: [
       {
         text: 'User',
         align: 'start',
@@ -281,55 +280,17 @@ export default {
         sortable: true,
         value: 'host'
       },
-      // {
-      //   text: 'max_questions',
-      //   align: 'start',
-      //   sortable: true,
-      //   value: 'max_questions'
-      // },
-      // {
-      //   text: 'max_updates',
-      //   align: 'start',
-      //   sortable: true,
-      //   value: 'max_updates'
-      // },
-      // {
-      //   text: 'max_connections',
-      //   align: 'start',
-      //   sortable: true,
-      //   value: 'max_connections'
-      // },
-      // {
-      //   text: 'max_user_connections',
-      //   align: 'start',
-      //   sortable: true,
-      //   value: 'max_user_connections',
-      //   width: 345
-      // },
-      // {
-      //   text: 'max_statement_time',
-      //   align: 'start',
-      //   sortable: true,
-      //   value: 'max_statement_time',
-      //   width: 345
-      // },
       {
-        text: 'Roles',
+        text: 'Status',
         align: 'start',
         sortable: true,
-        value: 'admin_roles'
+        value: 'status'
       },
-      // {
-      //   text: 'is_role',
-      //   align: 'start',
-      //   sortable: true,
-      //   value: 'is_role'
-      // },
       {
-        text: 'Expired',
-        align: 'start',
+        text: 'N. Conexões',
+        align: 'center',
         sortable: true,
-        value: 'password_expired'
+        value: 'count'
       }
     ],
     colunasDbSizeList: [
@@ -356,12 +317,12 @@ export default {
         align: 'start',
         sortable: true,
         value: 'TOTAL_MB'
-      },
-      {
-        text: 'Disponível (MB)',
-        align: 'start',
-        sortable: true,
-        value: 'FREE_SPACE_MB'
+      // },
+      // {
+      //   text: 'Disponível (MB)',
+      //   align: 'start',
+      //   sortable: true,
+      //   value: 'FREE_SPACE_MB'
       }
     ],
     colunasProcessList: [
@@ -468,7 +429,7 @@ export default {
     ...mapState('paginaMonitorDashboard', [
       'hostInfo',
       'instanceInfo',
-      'usersList',
+      'connectedUsersList',
       'dbSizeList',
       'processList',
       'connectionsCount',
@@ -483,7 +444,7 @@ export default {
 
       await this.listarHostInfo()
       await this.listarInstanceInfo()
-      await this.listarUsersList()
+      await this.listarConnectedUsersList()
       await this.listarDbSizeList()
       await this.listarProcessList()
       await this.listarConnectionsCount()
@@ -510,7 +471,7 @@ export default {
     ...mapActions('paginaMonitorDashboard', [
       'listarHostInfo',
       'listarInstanceInfo',
-      'listarUsersList',
+      'listarConnectedUsersList',
       'listarDbSizeList',
       'listarProcessList',
       'listarConnectionsCount',
@@ -523,7 +484,7 @@ export default {
 
       await this.listarHostInfo()
       await this.listarInstanceInfo()
-      await this.listarUsersList()
+      await this.listarConnectedUsersList()
       await this.listarDbSizeList()
       await this.listarProcessList()
       await this.listarConnectionsCount()
@@ -534,6 +495,7 @@ export default {
     },
 
     async refreshProcess (interval) {
+      await this.listarConnectedUsersList()
       await this.listarProcessList()
       await this.listarConnectionsCount()
       await this.listarBytesCount()

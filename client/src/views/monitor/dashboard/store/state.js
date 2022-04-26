@@ -1,7 +1,7 @@
 export default {
   hostInfo: [],
   instanceInfo: [],
-  usersList: [],
+  connectedUsersList: [],
   dbSizeList: [],
   processList: [],
   connectionsCount: [],
