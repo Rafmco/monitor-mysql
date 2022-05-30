@@ -1,5 +1,10 @@
 export default [
   {
+    path: '/settings/server',
+    name: 'Servidores',
+    component: () => import('@/views/settings/server')
+  },
+  {
     path: '/settings/menu',
     name: 'Menus',
     component: () => import('@/views/settings/menu')

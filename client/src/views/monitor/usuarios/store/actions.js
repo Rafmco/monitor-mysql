@@ -3,7 +3,10 @@ import axios from '@/plugins/axios'
 export const listarUsersList = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/users/usersList', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -18,7 +21,11 @@ export const listarUsersList = async ({ commit }, filtro) => {
 
 export const listarRolesDropdown = async ({ commit }, dados) => {
   try {
-    const res = await axios.get('monitor/users/rolesDropdown')
+    const res = await axios.get('monitor/users/rolesDropdown', {
+      params: {
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
+    })
 
     if (!res.data.erro) {
       commit('rolesDropdown', res.data)
@@ -30,10 +37,13 @@ export const listarRolesDropdown = async ({ commit }, dados) => {
   }
 }
 
-export const listarShowCreate = async ({ commit }, dados) => {
+export const listarShowCreate = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/users/showCreate', {
-      params: dados
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -46,10 +56,13 @@ export const listarShowCreate = async ({ commit }, dados) => {
   }
 }
 
-export const listarShowGrants = async ({ commit }, dados) => {
+export const listarShowGrants = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/users/showGrants', {
-      params: dados
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -62,10 +75,13 @@ export const listarShowGrants = async ({ commit }, dados) => {
   }
 }
 
-export const createUser = async ({ commit }, dados) => {
+export const createUser = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/users/createUser', {
-      params: dados
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     return res.data
@@ -74,10 +90,13 @@ export const createUser = async ({ commit }, dados) => {
   }
 }
 
-export const dropUser = async ({ commit }, dados) => {
+export const dropUser = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/users/dropUser', {
-      params: dados
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     return res.data

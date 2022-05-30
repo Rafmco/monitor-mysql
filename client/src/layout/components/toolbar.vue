@@ -8,7 +8,7 @@
     height="50"
     class="pl-2"
   >
-    <!-- <v-app-bar-nav-icon /> -->
+    <!-- icon -->
     <v-app-bar-nav-icon @click="$emit('update:primaryDrawer', !primaryDrawer)" />
     <v-toolbar-title
       style="cursor: pointer"
@@ -21,17 +21,44 @@
       >
     </v-toolbar-title>
 
+    <!-- Title -->
     <v-toolbar-title>
-      <!-- class="text-uppercase" -->
       <span
-        style="font-size: 35px !important; margin-left: 10px;"
+        style="font-size: 30px !important; margin-left: 10px;"
       >
         MySQL Monitor
       </span>
     </v-toolbar-title>
 
+    <v-divider
+      vertical
+      inset
+      class="divider-app mx-5"
+    />
+
+    <!-- Server -->
+    <v-col>
+      <v-toolbar-title>
+        <v-autocomplete
+          v-model="serverUsuario"
+          :items="server ? server : []"
+          rounded
+          flat
+          hide-details
+          hide-selected
+          no-filter
+          :item-text="getServerTitle"
+          item-value="id"
+          label="Server"
+          placeholder="Server"
+          @change="updateServer()"
+        />
+      </v-toolbar-title>
+    </v-col>
+
     <v-spacer />
 
+    <!-- User Menu -->
     <v-menu
       bottom
       left
@@ -93,6 +120,8 @@
   </v-app-bar>
 </template>
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'ComponenteToolbar',
 
@@ -116,16 +145,47 @@ export default {
   },
 
   data: () => ({
-    dataAtual: ''
+    dataAtual: '',
+    serverUsuario: ''
   }),
 
+  computed: {
+    ...mapState('app', [
+      'server'
+    ])
+  },
+
+  watch: {
+    listarServer (valor) {
+      if (valor) {
+        this.listarServer()
+      }
+    }
+  },
+
   created () {
+    this.listarServer()
+    this.refreshServer()
+
     setTimeout(() => {
       this.atualizarData()
     }, 200)
   },
 
   methods: {
+    ...mapActions('app', [
+      'listarServer'
+    ]),
+
+    refreshServer () {
+      this.serverUsuario = JSON.parse(localStorage.getItem('monitor-mysql:token') ? window.atob(localStorage.getItem('monitor-mysql:server')) : '')
+    },
+
+    updateServer () {
+      localStorage.setItem('monitor-mysql:server', window.btoa(JSON.stringify(this.serverUsuario)))
+      window.location.reload()
+    },
+
     atualizarData () {
       this.dataAtual = this.$day().format('DD/MM/YYYY HH:mm:ss')
 
@@ -133,10 +193,15 @@ export default {
         this.atualizarData()
       }, 1000)
     },
+
     voltarInicio () {
       if ((this.$router.currentRoute.path !== '/') && (this.$router.currentRoute.path !== '/monitor')) {
         this.$router.push('/')
       }
+    },
+
+    getServerTitle (item) {
+      return `[${item.id}] ${item.name} - ${item.description}`
     }
   }
 }

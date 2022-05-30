@@ -527,7 +527,7 @@ export default {
     },
 
     async refreshProcess (interval) {
-      await this.listarUser()
+      await this.listarUsers()
     },
 
     resetFormulario () {

@@ -3,7 +3,10 @@ import axios from '@/plugins/axios'
 export const listarEventsList = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/events/eventsList', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -30,10 +33,13 @@ export const listarSchemasDropdown = async ({ commit }, dados) => {
   }
 }
 
-export const listarShowCreate = async ({ commit }, dados) => {
+export const listarShowCreate = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/events/showCreate', {
-      params: dados
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -46,10 +52,13 @@ export const listarShowCreate = async ({ commit }, dados) => {
   }
 }
 
-export const createEvent = async ({ commit }, dados) => {
+export const createEvent = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/events/createEvent', {
-      params: dados
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     return res.data

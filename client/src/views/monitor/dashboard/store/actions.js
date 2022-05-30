@@ -3,7 +3,10 @@ import axios from '@/plugins/axios'
 export const listarHostInfo = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/hostInfo', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -19,7 +22,10 @@ export const listarHostInfo = async ({ commit }, filtro) => {
 export const listarInstanceInfo = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/instanceInfo', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -35,7 +41,10 @@ export const listarInstanceInfo = async ({ commit }, filtro) => {
 export const listarConnectedUsersList = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/connectedUsersList', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -51,7 +60,10 @@ export const listarConnectedUsersList = async ({ commit }, filtro) => {
 export const listarDbSizeList = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/dbSizeList', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -67,7 +79,10 @@ export const listarDbSizeList = async ({ commit }, filtro) => {
 export const listarProcessList = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/processList', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -83,7 +98,10 @@ export const listarProcessList = async ({ commit }, filtro) => {
 export const listarConnectionsCount = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/connectionsCount', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -99,7 +117,10 @@ export const listarConnectionsCount = async ({ commit }, filtro) => {
 export const listarBytesCount = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/bytesCount', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {
@@ -115,7 +136,10 @@ export const listarBytesCount = async ({ commit }, filtro) => {
 export const listarStatementsCount = async ({ commit }, filtro) => {
   try {
     const res = await axios.get('monitor/dashboard/statementsCount', {
-      params: filtro
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
     })
 
     if (!res.data.erro) {

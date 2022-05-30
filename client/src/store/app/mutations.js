@@ -9,6 +9,9 @@ export default {
   menusUsuario (state, param) {
     state.menusUsuario = param
   },
+  server (state, param) {
+    state.server = param
+  },
   nome (state, param) {
     state.nome = param
   },

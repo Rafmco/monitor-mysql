@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 
 module.exports = app => {
   app.post('/login', app.src.auth.login.login)
+  app.get('/login/menu/:id', app.src.auth.login.listarMenu)
+  app.get('/login/server/:id', app.src.auth.login.listarServer)
 
   // Valida autenticação
   app.all('*', app.src.auth.verifyToken.verify)
@@ -21,6 +23,12 @@ module.exports = app => {
   app.post('/profile/salvarMenu',  app.src.controller.settings.profile.salvarMenu)
   app.delete('/profile/:id',       app.src.controller.settings.profile.deletar)
   app.post('/profile/deletarMenu', app.src.controller.settings.profile.deletarMenu)
+
+  app.get('/server',        app.src.controller.settings.server.listar)
+  app.get('/server/:id',    app.src.controller.settings.server.exibir)
+  app.put('/server',        app.src.controller.settings.server.editar)
+  app.post('/server',       app.src.controller.settings.server.salvar)
+  app.delete('/server/:id', app.src.controller.settings.server.deletar)
 
   app.get('/user',        app.src.controller.settings.user.listar)
   app.get('/user/:id',    app.src.controller.settings.user.exibir)

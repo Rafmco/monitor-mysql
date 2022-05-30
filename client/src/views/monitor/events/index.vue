@@ -645,7 +645,7 @@ export default {
           statement: this.formulario.statement || undefined,
           comment: this.formulario.comment || undefined
         }
-        console.log(form)
+
         let res = ''
         res = await this.createEvent(form)
 

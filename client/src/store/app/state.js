@@ -1,7 +1,8 @@
 export default {
   login: '',
-  menusUsuario: '',
   nome: '',
+  menusUsuario: '',
+  server: '',
   notificacao: {
     ativo: false,
     cor: null,

@@ -49,12 +49,6 @@ export default {
     }
   },
 
-  // updated () {
-  //   setTimeout(() => {
-  //     this.refreshMenu()
-  //   }, 400)
-  // },
-
   methods: {
     ...mapActions('app', [
       'logout',
