@@ -27,18 +27,12 @@ export const logarSistema = async ({ commit, state }, param) => {
 
 export const logout = async ({ commit }) => {
   try {
-    // const res = await axios.get('controle-acesso/autenticacao/logout')
-
-    // if (!res.data.erro) {
     localStorage.removeItem('monitor-mysql:token')
     localStorage.removeItem('monitor-mysql:nome')
     localStorage.removeItem('monitor-mysql:profile')
-    // localStorage.removeItem('monitor-mysql:rotas')
+    localStorage.removeItem('monitor-mysql:server')
 
     axios.defaults.headers['Authorization'] = undefined
-    // }
-
-    // return res.data
   } catch (error) {
     return error
   }

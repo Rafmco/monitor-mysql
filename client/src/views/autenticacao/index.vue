@@ -99,7 +99,6 @@
                                 <v-text-field
                                   ref="login"
                                   v-model="formulario.login"
-                                  v-uppercase
                                   :error-messages="errors"
                                   :hide-details="!errors.length"
                                   append-icon="mdi-account"
@@ -107,6 +106,7 @@
                                   label="Usuário"
                                   placeholder="00000-USUARIO"
                                   type="text"
+                                  @input="(val) => (formulario.login = formulario.login ? formulario.login.toUpperCase() : null)"
                                 />
                               </validation-provider>
                             </v-col>

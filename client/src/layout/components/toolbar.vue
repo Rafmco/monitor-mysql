@@ -145,7 +145,7 @@ export default {
   },
 
   data: () => ({
-    dataAtual: '',
+    // dataAtual: '',
     serverUsuario: ''
   }),
 
@@ -167,9 +167,9 @@ export default {
     this.listarServer()
     this.refreshServer()
 
-    setTimeout(() => {
-      this.atualizarData()
-    }, 200)
+    // setTimeout(() => {
+    //   this.atualizarData()
+    // }, 200)
   },
 
   methods: {
@@ -186,13 +186,13 @@ export default {
       window.location.reload()
     },
 
-    atualizarData () {
-      this.dataAtual = this.$day().format('DD/MM/YYYY HH:mm:ss')
+    // atualizarData () {
+    //   this.dataAtual = this.$day().format('DD/MM/YYYY HH:mm:ss')
 
-      setTimeout(() => {
-        this.atualizarData()
-      }, 1000)
-    },
+    //   setTimeout(() => {
+    //     this.atualizarData()
+    //   }, 1000)
+    // },
 
     voltarInicio () {
       if ((this.$router.currentRoute.path !== '/') && (this.$router.currentRoute.path !== '/monitor')) {

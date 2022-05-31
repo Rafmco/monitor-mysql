@@ -57,9 +57,8 @@ export default {
     async deslogar () {
       this.loading = true
 
-      let res = await this.logout()
-
-      if (!res.erro) this.$router.push('/login')
+      this.logout()
+      this.$router.push('/login')
 
       this.loading = false
     },

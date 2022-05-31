@@ -21,7 +21,6 @@
               >
                 <v-text-field
                   ref="login"
-                  v-uppercase
                   :value="login"
                   :error-messages="errors"
                   :hide-details="!errors.length"
