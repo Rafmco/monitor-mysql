@@ -103,7 +103,6 @@ export default {
       type: String
     },
     altura: {
-      // required: false,
       default: '',
       type: String
     },
@@ -152,7 +151,7 @@ export default {
       type: String
     },
     xMaxTicksLimit: {
-      default: 36,
+      default: 24,
       type: Number
     },
     radius: {

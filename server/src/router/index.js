@@ -52,6 +52,7 @@ module.exports = app => {
   app.get('/monitor/dashboard/connectionsCount',   app.src.controller.monitor.dashboard.connectionsCount)
   app.get('/monitor/dashboard/bytesCount',         app.src.controller.monitor.dashboard.bytesCount)
   app.get('/monitor/dashboard/statementsCount',    app.src.controller.monitor.dashboard.statementsCount)
+  app.get('/monitor/dashboard/innoDbBufferPool',   app.src.controller.monitor.dashboard.innoDbBufferPool)
 
   app.get('/monitor/variables/systemVariablesList', app.src.controller.monitor.variables.systemVariablesList)
   app.get('/monitor/variables/setVariable',         app.src.controller.monitor.variables.setVariable)

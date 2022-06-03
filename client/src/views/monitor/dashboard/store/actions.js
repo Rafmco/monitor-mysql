@@ -151,3 +151,22 @@ export const listarStatementsCount = async ({ commit }, filtro) => {
     return error
   }
 }
+
+export const listarInnoDbBufferPool = async ({ commit }, filtro) => {
+  try {
+    const res = await axios.get('monitor/dashboard/innoDbBufferPool', {
+      params: {
+        ...filtro,
+        server_id: JSON.parse(window.atob(localStorage.getItem('monitor-mysql:server')))
+      }
+    })
+
+    if (!res.data.erro) {
+      commit('innoDbBufferPool', res.data)
+    }
+
+    return res.data
+  } catch (error) {
+    return error
+  }
+}

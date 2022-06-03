@@ -6,5 +6,6 @@ export default {
   processList: [],
   connectionsCount: [],
   bytesCount: [],
-  statementsCount: []
+  statementsCount: [],
+  innoDbBufferPool: []
 }

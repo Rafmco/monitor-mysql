@@ -142,6 +142,20 @@ module.exports = app => {
         }
     }
 
+    const innoDbBufferPool = async (req, res) => {
+        try {
+            const sql = `CALL audit.sp_monitor_innodb_buffer_pool;`;
+
+            const db = Knex(await writeConfig(req.query.server_id))
+            const sqlQuery = await db.raw(sql);
+            db.destroy();
+
+            return res.json(sqlQuery[0][0]);
+        } catch (error) {
+            return res.json({ erro: error.message });
+        }
+    }
+
     return {
         hostInfo,
         instanceInfo,
@@ -150,6 +164,7 @@ module.exports = app => {
         processList,
         connectionsCount,
         bytesCount,
-        statementsCount
+        statementsCount,
+        innoDbBufferPool
     };
 };

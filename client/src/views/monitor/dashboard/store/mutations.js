@@ -7,7 +7,7 @@ export default {
 
   instanceInfo (state, param) {
     param.forEach(element => {
-      element.up_since = day(element.up_since).format('DD/MM/YYYY HH:mm:ss')
+      element.up_since = day(element.up_since).format('DD/MM/YY HH:mm')
     })
 
     state.instanceInfo = param
@@ -113,6 +113,14 @@ export default {
     aux.push(objDados)
 
     state.statementsCount = aux
+  },
+
+  innoDbBufferPool (state, param) {
+    param.forEach(element => {
+      element.utilization = Math.trunc(element.utilization * 100) + '%'
+    })
+
+    state.innoDbBufferPool = param
   },
 
   reset: () => {}
