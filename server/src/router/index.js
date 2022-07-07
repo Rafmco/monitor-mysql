@@ -4,6 +4,7 @@ module.exports = app => {
   app.post('/login', app.src.auth.login.login)
   app.get('/login/menu/:id', app.src.auth.login.listarMenu)
   app.get('/login/server/:id', app.src.auth.login.listarServer)
+  app.get('/ping', app.src.auth.login.ping)
 
   // Valida autenticação
   app.all('*', app.src.auth.verifyToken.verify)

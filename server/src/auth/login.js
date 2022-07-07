@@ -75,6 +75,13 @@ module.exports = app => {
     }
   }
 
+  const ping = async (_req, res) => {
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+
+    return res.json({ data: today.toISOString() })
+  }
+
   const listarMenu = async (req, res) => {
     try {
       const err = await validate(req.params, validarProfile)
@@ -125,6 +132,7 @@ module.exports = app => {
 
   return {
     login,
+    ping,
     listarMenu,
     listarServer
   }
