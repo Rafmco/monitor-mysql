@@ -70,7 +70,7 @@
                             :src="logo"
                             aspect-ratio
                             class="card-logo"
-                            max-width="200"
+                            max-width="180"
                           />
                         </v-col>
                         <v-col
@@ -104,7 +104,7 @@
                                   append-icon="mdi-account"
                                   class="required"
                                   label="Usuário"
-                                  placeholder="00000-USUARIO"
+                                  placeholder="USUARIO"
                                   type="text"
                                   @input="(val) => (formulario.login = formulario.login ? formulario.login.toUpperCase() : null)"
                                 />
