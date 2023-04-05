@@ -9,9 +9,9 @@
   },
   "dependencies": {
     "@ianwalter/vuex-reset": "^4.3.2",
-    "@mdi/font": "^5.8.55",
+    "@mdi/font": "^6.9.96",
     "axios": "^0.21.2",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "core-js": "^3.4.4",
     "dayjs": "^1.8.28",
     "register-service-worker": "^1.6.2",
@@ -23,7 +23,7 @@
     "vue-clipboard2": "^0.3.1",
     "vue-router": "^3.3.4",
     "vue-the-mask": "^0.11.1",
-    "vuetify": "^2.3.2",
+    "vuetify": "^2.6.1",
     "vuex": "^3.4.0",
     "xcryptig": "^1.0.0"
   },

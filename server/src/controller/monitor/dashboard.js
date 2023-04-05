@@ -61,6 +61,7 @@ module.exports = app => {
     const connectedUsersList = async (req, res) => {
         try {
             const sql = `CALL audit.sp_monitor_connected_users_list;`;
+            // https://www.techonthenet.com/mariadb/questions/find_users_logged_in.php
 
             const db = Knex(await writeConfig(req.query.server_id))
             const sqlQuery = await db.raw(sql);
@@ -145,7 +146,7 @@ module.exports = app => {
     const innoDbBufferPool = async (req, res) => {
         try {
             const sql = `CALL audit.sp_monitor_innodb_buffer_pool;`;
-
+            // https://fromdual.com/innodb-variables-and-status-explained
             const db = Knex(await writeConfig(req.query.server_id))
             const sqlQuery = await db.raw(sql);
             db.destroy();
