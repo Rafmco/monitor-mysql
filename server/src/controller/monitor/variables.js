@@ -32,13 +32,14 @@ module.exports = app => {
 
   const systemVariablesList = async(req, res) => {
     try {
-      const sql = `CALL audit.sp_monitor_system_variables();`;
+      // const sql = `CALL audit.sp_monitor_system_variables();`;
+      const sql = `SHOW VARIABLES;`;
 
       const db = Knex(await writeConfig(req.query.server_id))
       const sqlQuery = await db.raw(sql);
       db.destroy();
 
-      return res.json(sqlQuery[0][0]);
+      return res.json(sqlQuery[0]);
     } catch (error) {
       return res.json({ erro: error.message });
     }
