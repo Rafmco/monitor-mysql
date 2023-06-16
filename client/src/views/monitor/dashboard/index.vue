@@ -83,7 +83,7 @@
                       <div
                         class="text-body-2"
                       >
-                        {{ innoDbBufferPool[0].buffer_pool_read_req }}
+                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_read_req : 0 }}
                       </div>
                     </v-list-item-title>
                     <v-list-item-title
@@ -93,7 +93,7 @@
                       <div
                         class="text-body-2"
                       >
-                        {{ innoDbBufferPool[0].buffer_pool_write_req }}
+                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_write_req : 0 }}
                       </div>
                     </v-list-item-title>
                     <v-list-item-title
@@ -103,7 +103,7 @@
                       <div
                         class="text-body-2"
                       >
-                        {{ innoDbBufferPool[0].buffer_pool_reads }}
+                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_reads : 0 }}
                       </div>
                     </v-list-item-title>
                   </v-list-item-content>
@@ -117,10 +117,10 @@
                       :rotate="270"
                       :size="100"
                       :width="20"
-                      :value="innoDbBufferPool[0].utilization"
+                      :value="innoDbBufferPool[0] ? innoDbBufferPool[0].utilization : 0"
                       color="secondary"
                     >
-                      {{ innoDbBufferPool[0].utilization }}
+                      {{ innoDbBufferPool[0] ? innoDbBufferPool[0].utilization : 0 }}
                     </v-progress-circular>
                   </v-list-item-content>
                 </v-list-item>
@@ -336,7 +336,7 @@ export default {
         text: 'User',
         align: 'start',
         sortable: true,
-        value: 'user'
+        value: 'users'
       },
       {
         text: 'Host',

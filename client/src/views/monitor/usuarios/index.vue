@@ -294,13 +294,13 @@ export default {
         text: 'Username',
         align: 'start',
         sortable: true,
-        value: 'user'
+        value: 'User'
       },
       {
         text: 'Hostname',
         align: 'start',
         sortable: true,
-        value: 'host'
+        value: 'Host'
       },
       // {
       //   text: 'max_questions',
