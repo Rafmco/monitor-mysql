@@ -14,6 +14,7 @@
           flat
           style="background-color: #fff"
         >
+          <!-- Row 1 -->
           <v-row
             id="Row1"
             class="align-start pa-0"
@@ -27,104 +28,122 @@
               md="2"
               xs="2"
             >
-              <v-card
-                outlined
-              >
-                <v-list-item
-                  three-line
-                  class="pa-0 ma-0"
+              <!-- row hostInfo -->
+              <v-row dense>
+                <v-card
+                  class="mt-1"
+                  outlined
+                  width="100%"
                 >
                   <v-card-title
-                    class="text-button"
-                  >
-                    {{ hostInfo[0] ? hostInfo[0]['hostname'] : '' }}
-                  </v-card-title>
-                  <v-list-item-content
-                    class="pa-0 ma-0"
+                    class="pa-0 ma-0 justify-center"
                   >
                     <div class="text-overline text-center pa-0 ma-0">
-                      {{ instanceInfo[0] ? instanceInfo[0]['version'] : '' }}
+                      {{ hostInfo[0] ? hostInfo[0]['hostname'] : '' }}
                     </div>
-                    <v-list-item-title
-                      class="text-body-2 text-center pa-0 ma-0"
-                    >
-                      <div>
-                        {{ 'Uptime ' + (instanceInfo[0] ? instanceInfo[0]['uptime_days'] : '') + ' Day(s)' }}
-                      </div>
-                    </v-list-item-title>
-                    <v-list-item-title
-                      class="text-body-2 text-center pa-0 ma-0"
-                    >
-                      {{ instanceInfo[0] ? instanceInfo[0]['up_since'] : '' }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-card>
-              <v-card
-                outlined
-                class="mt-2"
-              >
-                <div
-                  class="text-button text-center mx-2"
+                  </v-card-title>
+                </v-card>
+              </v-row>
+              <!-- row instanceInfo -->
+              <v-row dense>
+                <v-card
+                  class="mt-1"
+                  outlined
                 >
-                  Buffer Pool
-                </div>
-                <v-list-item
-                  three-line
-                  class="pa-0 ma-0"
-                >
-                  <v-list-item-content
-                    class="pa-0 mx-2"
-                  >
-                    <v-list-item-title
-                      class="text-subtitle-2 text-center pa-0"
-                    >
-                      Read Req/s
-                      <div
-                        class="text-body-2"
-                      >
-                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_read_req : 0 }}
-                      </div>
-                    </v-list-item-title>
-                    <v-list-item-title
-                      class="text-subtitle-2 text-center mt-1"
-                    >
-                      Write Reqs/s
-                      <div
-                        class="text-body-2"
-                      >
-                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_write_req : 0 }}
-                      </div>
-                    </v-list-item-title>
-                    <v-list-item-title
-                      class="text-subtitle-2 text-center mt-1"
-                    >
-                      Disk Read/s
-                      <div
-                        class="text-body-2"
-                      >
-                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_reads : 0 }}
-                      </div>
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-content
+                  <v-list-item
+                    three-line
                     class="pa-0 ma-0"
                   >
-                    <div class="text-subtitle-2 text-center">
-                      Usage
-                    </div>
-                    <v-progress-circular
-                      :rotate="270"
-                      :size="100"
-                      :width="20"
-                      :value="innoDbBufferPool[0] ? innoDbBufferPool[0].utilization : 0"
-                      color="secondary"
+                    <v-list-item-content
+                      class="pa-0 ma-0"
                     >
-                      {{ innoDbBufferPool[0] ? innoDbBufferPool[0].utilization : 0 }}
-                    </v-progress-circular>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-card>
+                      <div class="text-overline text-center pa-0 ma-0">
+                        {{ instanceInfo[0] ? instanceInfo[0]['version'] : '' }}
+                      </div>
+                      <v-list-item-title
+                        class="text-body-2 text-center pa-0 ma-0"
+                      >
+                        <div>
+                          {{ 'Uptime ' + (instanceInfo[0] ? instanceInfo[0]['uptime_days'] : '') + ' Day(s)' }}
+                        </div>
+                      </v-list-item-title>
+                      <v-list-item-title
+                        class="text-body-2 text-center pa-0 ma-0"
+                      >
+                        {{ instanceInfo[0] ? instanceInfo[0]['up_since'] : '' }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-card>
+              </v-row>
+              <!-- row bufferPool -->
+              <v-row dense>
+                <v-card
+                  outlined
+                  class="mt-1"
+                >
+                  <div
+                    class="text-button text-center mx-2"
+                  >
+                    Buffer Pool
+                  </div>
+                  <v-list-item
+                    three-line
+                    class="pa-0 ma-0"
+                  >
+                    <v-list-item-content
+                      class="pa-0 mx-2"
+                    >
+                      <v-list-item-title
+                        class="text-subtitle-2 text-center pa-0"
+                      >
+                        Read Req/s
+                        <div
+                          class="text-body-2"
+                        >
+                          {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_read_req : 0 }}
+                        </div>
+                      </v-list-item-title>
+                      <v-list-item-title
+                        class="text-subtitle-2 text-center mt-1"
+                      >
+                        Write Reqs/s
+                        <div
+                          class="text-body-2"
+                        >
+                          {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_write_req : 0 }}
+                        </div>
+                      </v-list-item-title>
+                      <v-list-item-title
+                        class="text-subtitle-2 text-center mt-1"
+                      >
+                        Disk Read/s
+                        <div
+                          class="text-body-2"
+                        >
+                          {{ innoDbBufferPool[0] ? innoDbBufferPool[0].buffer_pool_reads : 0 }}
+                        </div>
+                      </v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-content
+                      class="pa-0 ma-0"
+                    >
+                      <div class="text-subtitle-2 text-center">
+                        Usage
+                      </div>
+                      <v-progress-circular
+                        :rotate="270"
+                        :size="100"
+                        :width="20"
+                        :value="innoDbBufferPool[0] ? innoDbBufferPool[0].utilization : 0"
+                        color="secondary"
+                      >
+                        {{ innoDbBufferPool[0] ? innoDbBufferPool[0].utilization : 0 }}
+                      </v-progress-circular>
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-card>
+              </v-row>
             </v-col>
             <!-- Row1Col2 -->
             <v-col
@@ -134,11 +153,6 @@
               md="5"
               xs="5"
             >
-              <!-- <v-row
-                id="Col1Row1"
-                class="align-start pb-0"
-                dense
-              > -->
               <v-tooltip bottom>
                 <template v-slot:activator="{ on }">
                   <tabela
