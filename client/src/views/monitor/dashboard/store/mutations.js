@@ -54,9 +54,10 @@ export default {
     param.forEach(element => {
       // (Se Hora atual - 8 < Dia atual) ou (Se Hora >= (Hora atual - 8))
       if (day().subtract(8, 'hours').format('YYYY-MM-DD') < day().format('YYYY-MM-DD') || element.Time >= day().subtract(8, 'hours').format('HH:mm')) {
-        // obj[day(element.Time, 'HH:mm:ss').format('HH:mm')] = element.Value
-        objReceived[element.Time] = element.bytes_received
-        objSent[element.Time] = element.bytes_sent
+        objReceived[day(element.Time, 'HH:mm:ss').format('HH:mm')] = element.bytes_received
+        // objReceived[element.Time] = element.bytes_received
+        objSent[day(element.Time, 'HH:mm:ss').format('HH:mm')] = element.bytes_sent
+        // objSent[element.Time] = element.bytes_sent
       }
     })
 
