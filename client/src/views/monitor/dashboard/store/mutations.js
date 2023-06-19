@@ -119,6 +119,9 @@ export default {
   innoDbBufferPool (state, param) {
     param.forEach(element => {
       element.utilization = Math.trunc(element.utilization * 100) + '%'
+      element.buffer_pool_read_req = Math.trunc(element.buffer_pool_read_req)
+      element.buffer_pool_write_req = Math.trunc(element.buffer_pool_write_req)
+      element.buffer_pool_reads = Math.trunc(element.buffer_pool_reads)
     })
 
     state.innoDbBufferPool = param
