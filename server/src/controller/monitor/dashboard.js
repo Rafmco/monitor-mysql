@@ -145,7 +145,7 @@ module.exports = app => {
 
     const innoDbBufferPool = async (req, res) => {
         try {
-            const sql = `CALL audit.sp_monitor_innodb_buffer_pool;`;
+            const sql = `CALL audit.sp_monitor_innodb_buffer_pool_2;`;
             // https://fromdual.com/innodb-variables-and-status-explained
             const db = Knex(await writeConfig(req.query.server_id))
             const sqlQuery = await db.raw(sql);
